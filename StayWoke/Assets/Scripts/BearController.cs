@@ -12,6 +12,7 @@ public class BearController : MonoBehaviour {
 
     bool isSleeping = false;
     bool seenPlayer = false;
+    bool isWalking = false;
 
 	// Use this for initialization
 	void Start () {
@@ -19,43 +20,74 @@ public class BearController : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void FixedUpdate () {
+
         Vector3 direction = player.position - this.transform.position;
         // Prevent NPC from tipping over when you get too close 
         direction.y = 0;
 
+        
+
+        //if(anim.GetBool("isSleeping"))
+        //{
+        //    StartCoroutine(goToSleep());
+        //    return;
+        //}
+
+        float distanceToPlayer = Vector3.Distance(player.position, this.transform.position);
+        Debug.Log("Distance to player: " + distanceToPlayer);
+
         // Basically get FOV from NPC head
         float angle = Vector3.Angle(direction, head.up);
+        Debug.Log("FOV to player: " + angle);
+
+        float directionLength = direction.magnitude;
 
         // If player is close to NPC and is either in FOV or has already seen the player, walk or attack
-        if (Vector3.Distance(player.position, this.transform.position) < 10 && (angle < 30 || seenPlayer)) {
+        if (distanceToPlayer < 5 && (angle < 30 || seenPlayer)) {
             seenPlayer = true;
 
             // Have NPC rotate towards player
             this.transform.rotation = Quaternion.Slerp(this.transform.rotation, Quaternion.LookRotation(direction), 0.1f);
 
+            Debug.Log("Direction Length: " + directionLength);
+
+            if(directionLength < 5)
+            {
+                attackPlayer();
+            }
+            else
+            {
+                walkTowardsPlayer();
+            }
+
+
+
             // Only starts to follow within a certain distance
-            if(direction.magnitude > 5) {
+            if (direction.magnitude > 3) {
                 walkTowardsPlayer();
             }
             else {
                 attackPlayer();
             }
         }
-        else {
+        else
+        {
             seenPlayer = false;
 
             // This is a little buggy
-            if ((int)Random.Range(0.0f, 1.0f) == 0)
-            {
-                print("Start sleep cycle");
-                StartCoroutine(goToSleep());
-                print("Finished sleep cycle");
-            }
-            else
-            {
-                setIdle();
-            }
+            //if ((int)Random.Range(0.0f, 1.0f) == 0)
+            //{
+            //    print("Start sleep cycle");
+            //    StartCoroutine(goToSleep());
+            //    print("Finished sleep cycle");
+            //}
+            //else
+            //{
+            //    setIdle();
+            //}
+
+            setIdle();
         }
     }
 
@@ -86,10 +118,12 @@ public class BearController : MonoBehaviour {
     // Add follow steering behavior *maybe*
     void walkTowardsPlayer()
     {
+        this.isWalking = true;
+        this.transform.Translate(0, 0, 0.005f);
+        anim.SetBool("isWalking", true);
+
         anim.SetBool("isIdle", false);
         anim.SetBool("isSleeping", false);
-        this.transform.Translate(0, 0, 0.05f);
-        anim.SetBool("isWalking", true);
         anim.SetBool("isAttacking", false);
     }
 
