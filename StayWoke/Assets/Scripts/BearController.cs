@@ -2,31 +2,38 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BearController : MonoBehaviour {
-
+public class BearController : MonoBehaviour
+{
     // Player
     public Transform player;
+    public CapsuleCollider player_collider;
+    public float collider_radius;
     // NPC
-    public Transform head;          
+    public Transform head;
     static Animator anim;
+    public float maxSightDistance;
+    public float maxSightAngle;
+    public Transform eyeTransform;
 
     bool isSleeping = false;
     bool seenPlayer = false;
     bool isWalking = false;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start()
+    {
         anim = GetComponent<Animator>();
-	}
-	
-	// Update is called once per frame
-	void FixedUpdate () {
+        collider_radius = player_collider.radius;
+    }
 
+    // Update is called once per frame
+    void FixedUpdate()
+    {
         Vector3 direction = player.position - this.transform.position;
         // Prevent NPC from tipping over when you get too close 
         direction.y = 0;
 
-        
+
 
         //if(anim.GetBool("isSleeping"))
         //{
@@ -43,8 +50,28 @@ public class BearController : MonoBehaviour {
 
         float directionLength = direction.magnitude;
 
+        //Do ray casts to check if the player can actually be seen
+        float maxSightDistance = 10.0f;
+
+        RaycastHit hit;
+
+        Vector3 playerPositionCenter    = player.position;
+        Vector3 playerPositionLeft      = player.position + eyeTransform.right * collider_radius;
+        Vector3 playerPositionRight     = player.position - eyeTransform.right * collider_radius;
+
+        Vector3 rayDirectionCenter = playerPositionCenter - eyeTransform.position;
+        Vector3 rayDirectionLeft = playerPositionLeft - eyeTransform.position;
+        Vector3 rayDirectionRight = playerPositionRight - eyeTransform.position;
+
+        bool player_seen = Physics.Raycast(eyeTransform.position, rayDirectionCenter, out hit, maxSightDistance) ||
+                           Physics.Raycast(eyeTransform.position, rayDirectionLeft, out hit, maxSightDistance) ||
+                           Physics.Raycast(eyeTransform.position, rayDirectionRight, out hit, maxSightDistance);
+
+        player_seen = hit.collider == player_collider;
+
         // If player is close to NPC and is either in FOV or has already seen the player, walk or attack
-        if (distanceToPlayer < 5 && (angle < 30 || seenPlayer)) {
+        if (player_seen && (angle < maxSightAngle || seenPlayer))
+        {
             seenPlayer = true;
 
             // Have NPC rotate towards player
@@ -52,7 +79,7 @@ public class BearController : MonoBehaviour {
 
             Debug.Log("Direction Length: " + directionLength);
 
-            if(directionLength < 5)
+            if (directionLength < 5)
             {
                 attackPlayer();
             }
@@ -64,10 +91,12 @@ public class BearController : MonoBehaviour {
 
 
             // Only starts to follow within a certain distance
-            if (direction.magnitude > 3) {
+            if (direction.magnitude > 3)
+            {
                 walkTowardsPlayer();
             }
-            else {
+            else
+            {
                 attackPlayer();
             }
         }
