@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BearController : MonoBehaviour {
-
+public class BearController : MonoBehaviour
+{
     // Player
     public Transform player;
+    public CapsuleCollider player_collider;
+    public float collider_radius;
     // NPC
     public Transform head;          
     static Animator anim;
+    float heightMultiplier;
 
     bool isSleeping = false;
     bool seenPlayer = false;
@@ -17,11 +20,12 @@ public class BearController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         anim = GetComponent<Animator>();
-	}
+        collider_radius = player_collider.radius;
+    }
 	
 	// Update is called once per frame
-	void FixedUpdate () {
-
+	void FixedUpdate ()
+    {
         Vector3 direction = player.position - this.transform.position;
         // Prevent NPC from tipping over when you get too close 
         direction.y = 0;
@@ -43,8 +47,25 @@ public class BearController : MonoBehaviour {
 
         float directionLength = direction.magnitude;
 
+        //Do ray casts to check if the player can actually be seen
+        float maxSightDistance = 10.0f;
+        heightMultiplier = head.position.y;
+
+        Vector3 playerPositionCenter = player.position;
+        Vector3 playerPositionLeft = player.position + this.transform.right * collider_radius;
+        Vector3 playerPositionRight = player.position - this.transform.right * collider_radius;
+
+        Vector3 rayDirectionCenter = playerPositionCenter - this.transform.position;
+        Vector3 rayDirectionLeft = playerPositionLeft - this.transform.position;
+        Vector3 rayDirectionRight = playerPositionRight - this.transform.position;
+
+        bool player_seen = Physics.Raycast(this.transform.position + Vector3.up * heightMultiplier, rayDirectionCenter, maxSightDistance) ||
+                           Physics.Raycast(this.transform.position + Vector3.up * heightMultiplier, rayDirectionLeft, maxSightDistance) ||
+                           Physics.Raycast(this.transform.position + Vector3.up * heightMultiplier, rayDirectionRight, maxSightDistance);
+
         // If player is close to NPC and is either in FOV or has already seen the player, walk or attack
-        if (distanceToPlayer < 5 && (angle < 30 || seenPlayer)) {
+        if (player_seen && (angle < 30 || seenPlayer))
+        {
             seenPlayer = true;
 
             // Have NPC rotate towards player
