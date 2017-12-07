@@ -15,6 +15,8 @@ public class BearController : MonoBehaviour
     public float maxSightAngle;
     public Transform eyeTransform;
 
+    public AudioSource audio;
+
     bool isSleeping = false;
     bool seenPlayer = false;
     bool isWalking = false;
@@ -24,6 +26,8 @@ public class BearController : MonoBehaviour
     {
         anim = GetComponent<Animator>();
         collider_radius = player_collider.radius;
+
+        audio = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -33,8 +37,6 @@ public class BearController : MonoBehaviour
         // Prevent NPC from tipping over when you get too close 
         direction.y = 0;
 
-
-
         //if(anim.GetBool("isSleeping"))
         //{
         //    StartCoroutine(goToSleep());
@@ -42,11 +44,11 @@ public class BearController : MonoBehaviour
         //}
 
         float distanceToPlayer = Vector3.Distance(player.position, this.transform.position);
-        Debug.Log("Distance to player: " + distanceToPlayer);
+        //Debug.Log("Distance to player: " + distanceToPlayer);
 
         // Basically get FOV from NPC head
         float angle = Vector3.Angle(direction, head.up);
-        Debug.Log("FOV to player: " + angle);
+        //Debug.Log("FOV to player: " + angle);
 
         float directionLength = direction.magnitude;
 
@@ -119,7 +121,22 @@ public class BearController : MonoBehaviour
             setIdle();
         }
     }
-
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Player")
+        {
+            if (audio.isPlaying)
+            {
+                audio.Stop();
+                Debug.Log("PLAYER");
+                audio.Play();
+            }
+            else
+            {
+                audio.Play();
+            }
+        }
+    }
     void setIdle()
     {
         anim.SetBool("isIdle", true);
