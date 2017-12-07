@@ -6,24 +6,43 @@ public class CollisionSound : MonoBehaviour {
 
     public AudioClip audio;
 
+    public bool onStart;
+    public bool thrown;
+
+    public int x;
+
 	// Use this for initialization
 	void Start () {
+        thrown = false;
+        onStart = true;
         GetComponent<AudioSource>().playOnAwake = false;
         GetComponent<AudioSource>().clip = audio;
 	}
-	
-    void OnCollisionEnter()
+
+    void Update()
     {
-        GetComponent<AudioSource>().Play();
     }
 
-    //private void OnCollisionStay(Collision collision)
-    //{
-    //    if (!audio.isPlaying && collision.relativeVelocity.magnitude >= 2) {
-    //        audio.volume = collision.relativeVelocity.magnitude / 20;
-    //        Debug.Log("Relative Velocity: " + collision.relativeVelocity.magnitude);
+    void OnCollisionEnter(Collision collision)
+    {
+        // Eventually want to add tags for walls too
+        if (collision.collider.tag == "Terrain")
+        {
+            if(onStart)
+            {
+                onStart = false;
+                return;
+            }
 
-    //        audio.Play();
-    //    }
-    //}
+            Debug.Log(collision.collider.tag);
+            this.GetComponent<AudioSource>().Play();
+            thrown = true;
+        }
+    }
+
+    public void printSomething(int n)
+    {
+        x = n;
+        Debug.Log("YASS");
+    }
 }

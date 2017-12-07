@@ -268,3 +268,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audio: {fileID: 0}
+  onStart: 0
+  thrown: 0
+  x: 0
