@@ -21,6 +21,8 @@ public class NPCMove : MonoBehaviour
 	void Start () {
         _navMeshAgent = this.GetComponent<NavMeshAgent>();
         _navMeshAgent.stoppingDistance = 1.5f;
+		_navMeshAgent.acceleration = 0.5f;
+		_navMeshAgent.speed = 1.0f;
 
         item0 = Instantiate(Resources.Load("FixedJointGrab_Cube")) as GameObject;
         item0.transform.position = new Vector3(98.04f, 10.075f, 90.78f);
