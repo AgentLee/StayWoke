@@ -10,7 +10,7 @@ public class BearController : MonoBehaviour
     public float collider_radius;
     // NPC
     public Transform head;
-    static Animator anim;
+    public Animator anim;
     public float maxSightDistance;
     public float maxSightAngle;
     public Transform eyeTransform;
@@ -137,7 +137,7 @@ public class BearController : MonoBehaviour
             }
         }
     }
-    void setIdle()
+    public void setIdle()
     {
         anim.SetBool("isIdle", true);
         anim.SetBool("prepSleep", false);
@@ -162,7 +162,7 @@ public class BearController : MonoBehaviour
 
     // TODO:
     // Add follow steering behavior *maybe*
-    void walkTowardsPlayer()
+    public void walkTowardsPlayer()
     {
         this.isWalking = true;
         this.transform.Translate(0, 0, 0.005f);
@@ -173,7 +173,7 @@ public class BearController : MonoBehaviour
         anim.SetBool("isAttacking", false);
     }
 
-    void attackPlayer()
+    public void attackPlayer()
     {
         anim.SetBool("isIdle", false);
         anim.SetBool("isSleeping", false);

@@ -10,10 +10,7 @@ public class NPCMove : MonoBehaviour
 
     NavMeshAgent _navMeshAgent;
 
-    public CollisionSound cs;
-
     public List<GameObject> items;
-
     public GameObject item0;
     public GameObject item1;
 
@@ -33,8 +30,6 @@ public class NPCMove : MonoBehaviour
         item1.transform.position = new Vector3(80.0f, 10.075f, 90.78f);
         items.Add(item1);
 
-        //GameObject item1 = Instantiate(Resources.Load("FixedJointGrab_Cube")) as GameObject;
-
         _destination = item0.transform;
 
         canGetToObject = false;
@@ -44,6 +39,9 @@ public class NPCMove : MonoBehaviour
     {
         if(_destination != null)
         {
+            //this.GetComponent<BearController>().anim.SetBool("isIdle", false);
+            //this.GetComponent<BearController>().anim.SetBool("isWalking", true);
+
             _navMeshAgent.SetDestination(targetDestination);
 
             for(int i = 0; i < items.Count; i++)
@@ -67,26 +65,28 @@ public class NPCMove : MonoBehaviour
             }
         }
 
-        // Calculate new distance to target
-        float pathLength = CalculatePathLength(targetDestination);
-        //Debug.Log(pathLength);
+        if(goToObject)
+        {
+            // Calculate new distance to target
+            float pathLength = CalculatePathLength(targetDestination);
 
-        // Check to see if the path length is within some radius
-        if (pathLength < 9.0f && goToObject)
-        {
-            canGetToObject = true;
-        }
-        else
-        {
-            canGetToObject = false;
-            item0.GetComponent<CollisionSound>().thrown = false;
-            item1.GetComponent<CollisionSound>().thrown = false;
-        }
+            // Check to see if the path length is within some radius
+            if (pathLength < 9.0f && goToObject)
+            {
+                canGetToObject = true;
+            }
+            else
+            {
+                canGetToObject = false;
+                item0.GetComponent<CollisionSound>().thrown = false;
+                item1.GetComponent<CollisionSound>().thrown = false;
+            }
 
-        // Basically need to listen for the objects that fall and make sounds.
-        if (canGetToObject)
-        {
-            SetDestination();
+            // Basically need to listen for the objects that fall and make sounds.
+            if (canGetToObject)
+            {
+                SetDestination();
+            }
         }
     }
 
@@ -94,7 +94,7 @@ public class NPCMove : MonoBehaviour
     {
         NavMeshPath path = new NavMeshPath();
 
-        if(_navMeshAgent.enabled)
+        if (_navMeshAgent.enabled)
         {
             _navMeshAgent.CalculatePath(targetPosition, path);
         }
@@ -104,14 +104,14 @@ public class NPCMove : MonoBehaviour
         allWayPoints[0] = transform.position;
         allWayPoints[allWayPoints.Length - 1] = targetPosition;
 
-        for(int i = 0; i < path.corners.Length; i++)
+        for (int i = 0; i < path.corners.Length; i++)
         {
             allWayPoints[i + 1] = path.corners[i];
         }
 
         float pathLength = 0f;
 
-        for(int i = 0; i < allWayPoints.Length - 1; i++)
+        for (int i = 0; i < allWayPoints.Length - 1; i++)
         {
             pathLength += Vector3.Distance(allWayPoints[i], allWayPoints[i + 1]);
         }
