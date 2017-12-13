@@ -5,7 +5,7 @@ using UnityEngine;
 public class BearController : MonoBehaviour
 {
     // Player
-    public Transform player;
+    public GameObject player;
     public CapsuleCollider player_collider;
     public float collider_radius;
     // NPC
@@ -16,6 +16,7 @@ public class BearController : MonoBehaviour
     public Transform eyeTransform;
 
     public AudioSource audio;
+    public AudioSource aux;
 
     bool isSleeping = false;
     bool seenPlayer = false;
@@ -28,12 +29,25 @@ public class BearController : MonoBehaviour
         collider_radius = player_collider.radius;
 
         audio = GetComponent<AudioSource>();
+
+        ////aux = GetComponent<AudioSource>();
+        //aux.Play();
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        Vector3 direction = player.position - this.transform.position;
+        if(player.GetComponent<PlayerHMDController>().canHearBear && !audio.isPlaying)
+        {
+            Debug.Log("DETECTS PLAYER");
+            aux.Play();
+        }
+        else
+        {
+            aux.Stop();
+        }
+
+        Vector3 direction = player.transform.position - this.transform.position;
         // Prevent NPC from tipping over when you get too close 
         direction.y = 0;
 
@@ -43,7 +57,7 @@ public class BearController : MonoBehaviour
         //    return;
         //}
 
-        float distanceToPlayer = Vector3.Distance(player.position, this.transform.position);
+        float distanceToPlayer = Vector3.Distance(player.transform.position, this.transform.position);
         //Debug.Log("Distance to player: " + distanceToPlayer);
 
         // Basically get FOV from NPC head
@@ -57,9 +71,9 @@ public class BearController : MonoBehaviour
 
         RaycastHit hit;
 
-        Vector3 playerPositionCenter    = player.position;
-        Vector3 playerPositionLeft      = player.position + eyeTransform.right * collider_radius;
-        Vector3 playerPositionRight     = player.position - eyeTransform.right * collider_radius;
+        Vector3 playerPositionCenter    = player.transform.position;
+        Vector3 playerPositionLeft      = player.transform.position + eyeTransform.right * collider_radius;
+        Vector3 playerPositionRight     = player.transform.position - eyeTransform.right * collider_radius;
 
         Vector3 rayDirectionCenter = playerPositionCenter - eyeTransform.position;
         Vector3 rayDirectionLeft = playerPositionLeft - eyeTransform.position;
@@ -79,7 +93,7 @@ public class BearController : MonoBehaviour
             // Have NPC rotate towards player
             this.transform.rotation = Quaternion.Slerp(this.transform.rotation, Quaternion.LookRotation(direction), 0.1f);
 
-            Debug.Log("Direction Length: " + directionLength);
+            //Debug.Log("Direction Length: " + directionLength);
 
             if (directionLength < 5)
             {
