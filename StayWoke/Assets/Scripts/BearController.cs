@@ -19,9 +19,10 @@ public class BearController : MonoBehaviour
     public AudioSource audio;
     public AudioSource aux;
 
-    bool isSleeping = false;
-    bool seenPlayer = false;
-    bool isWalking = false;
+    public bool isSleeping     = false;
+    public bool seenPlayer     = false;
+    public bool isWalking      = false;
+    public bool heardSomething = false;
 
     // Use this for initialization
     void Start()
@@ -87,15 +88,23 @@ public class BearController : MonoBehaviour
         bool playerAboveGrass = playerHead.transform.position.y > 11.01f;
         //Debug.Log(playerAboveGrass);
 
-
+        Coroutine sleepRoutine;
 
         if (anim.GetBool("isSleeping"))
         {
-            StartCoroutine(goToSleep());
-            return;
+            sleepRoutine = StartCoroutine(goToSleep());
+
+            //yield WaitForSeconds (0.25);
+
+            StopCoroutine(sleepRoutine);
         }
 
-
+        if (heardSomething)
+        {
+            Debug.Log("HEARD IT");
+            
+            Debug.Log("STOPPED");
+        }
 
         // If player is close to NPC and is either in FOV or has already seen the player, walk or attack
         //if (bearRaySeesPlayer && (angle < maxSightAngle || seenPlayer) && playerAboveGrass)
@@ -180,7 +189,11 @@ public class BearController : MonoBehaviour
         anim.SetBool("isAttacking", false);
 
         //Debug.Log(Time.time);
-        yield return new WaitForSeconds(10);
+        //while (!heardSomething)
+        //{
+        //    yield return new WaitForSeconds(0.01f);
+        //}
+        yield return null; // new WaitForSeconds(0.0f);
         //Debug.Log(Time.time);
 
         setIdle();
@@ -194,6 +207,14 @@ public class BearController : MonoBehaviour
         this.transform.Translate(0, 0, 0.005f);
         anim.SetBool("isWalking", true);
 
+        anim.SetBool("isIdle", false);
+        anim.SetBool("isSleeping", false);
+        anim.SetBool("isAttacking", false);
+    }
+
+    public void walkTowardsObject()
+    {
+        anim.SetBool("isWalking", true);
         anim.SetBool("isIdle", false);
         anim.SetBool("isSleeping", false);
         anim.SetBool("isAttacking", false);

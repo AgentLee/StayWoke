@@ -16,6 +16,7 @@ public class NPCMove : MonoBehaviour
     public GameObject item2;
 
     public GameObject player;
+    public GameObject bearController;
 
     public bool canGetToObject;
     private Vector3 targetDestination;
@@ -25,12 +26,13 @@ public class NPCMove : MonoBehaviour
         //player = GetComponent<PlayerHMDController>().gameObject;
 
         _navMeshAgent = this.GetComponent<NavMeshAgent>();
-        _navMeshAgent.stoppingDistance = 1.5f;
-		_navMeshAgent.acceleration = 0.5f;
+        _navMeshAgent.stoppingDistance = 0.15f;
+		_navMeshAgent.acceleration = 0.25f;
 		_navMeshAgent.speed = 1.0f;
 
         item0 = Instantiate(Resources.Load("FixedJointGrab_Cube")) as GameObject;
-        item0.transform.position = new Vector3(98.04f, 10.075f, 90.78f);
+        //item0.transform.position = new Vector3(98.04f, 10.075f, 90.78f);
+        item0.transform.position = new Vector3(70, 10, 104);
         items.Add(item0);
 
         item1 = Instantiate(Resources.Load("FixedJointGrab_Cube")) as GameObject;
@@ -45,6 +47,8 @@ public class NPCMove : MonoBehaviour
         _destination = item0.transform;
 
         canGetToObject = false;
+
+        bearController = GetComponent<BearController>().gameObject;
     }
 	
     void SetDestination()
@@ -54,9 +58,21 @@ public class NPCMove : MonoBehaviour
             //this.GetComponent<BearController>().anim.SetBool("isIdle", false);
             //this.GetComponent<BearController>().anim.SetBool("isWalking", true);
 
+
+            //bearController.GetComponent<BearController>().anim.SetBool("isWalking", false);
+            //_navMeshAgent.stoppingDistance = 10.0f;
             _navMeshAgent.SetDestination(targetDestination);
 
-            for(int i = 0; i < items.Count; i++)
+
+            //Debug.Log(_navMeshAgent.nextPosition);
+            //Debug.Log(_destination);
+            //Debug.Log("-------------------------");
+
+            Debug.Log(_navMeshAgent.pathStatus);
+
+            //bearController.GetComponent<BearController>().setIdle();
+
+            for (int i = 0; i < items.Count; i++)
             {
                 item0.GetComponent<CollisionSound>().thrown = false;
                 item1.GetComponent<CollisionSound>().thrown = false;
@@ -67,13 +83,24 @@ public class NPCMove : MonoBehaviour
 
 	// Update is called once per frame
 	void Update () {
+        float dist = (targetDestination - bearController.GetComponent<BearController>().transform.position).magnitude;
+        if(dist < 2.0f)
+        {
+            Debug.Log(dist);
+            bearController.GetComponent<BearController>().setIdle();
+            _navMeshAgent.isStopped = true;
+            return;
+        }
+
         bool goToObject = false;
 
         for(int i = 0; i < items.Count; i++)
         {
             if(items[i].GetComponent<CollisionSound>().thrown)
             {
+                //Debug.Log("THROWN");
                 targetDestination = items[i].transform.position;
+                _destination.position = targetDestination;
                 goToObject = true;
             }
         }
@@ -82,6 +109,8 @@ public class NPCMove : MonoBehaviour
         {
             // Calculate new distance to target
             float pathLength = CalculatePathLength(targetDestination);
+
+            //Debug.Log(pathLength);
 
             // Check to see if the path length is within some radius
             if (pathLength < 9.0f && goToObject)
@@ -99,7 +128,15 @@ public class NPCMove : MonoBehaviour
             // Basically need to listen for the objects that fall and make sounds.
             if (canGetToObject)
             {
+                Debug.Log("CANCANCANCAN");
+
+                bearController.GetComponent<BearController>().heardSomething = true;
+                bearController.GetComponent<BearController>().walkTowardsObject();
                 SetDestination();
+
+                //if (bearController.GetComponent<BearController>().isSleeping)
+                //{
+                //}
             }
         }
     }
