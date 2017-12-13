@@ -86,10 +86,10 @@ public class NPCMove : MonoBehaviour
         float dist = (targetDestination - bearController.GetComponent<BearController>().transform.position).magnitude;
         if(dist < 2.0f)
         {
-            Debug.Log(dist);
+            //Debug.Log(dist);
             bearController.GetComponent<BearController>().setIdle();
             _navMeshAgent.isStopped = true;
-            return;
+            //return;
         }
 
         bool goToObject = false;
@@ -133,6 +133,7 @@ public class NPCMove : MonoBehaviour
                 bearController.GetComponent<BearController>().heardSomething = true;
                 bearController.GetComponent<BearController>().walkTowardsObject();
                 SetDestination();
+                _navMeshAgent.isStopped = false;
 
                 //if (bearController.GetComponent<BearController>().isSleeping)
                 //{

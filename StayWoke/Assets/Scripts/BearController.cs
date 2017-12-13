@@ -32,6 +32,8 @@ public class BearController : MonoBehaviour
 
         audio = GetComponent<AudioSource>();
 
+
+        heardSomething = false;
         ////aux = GetComponent<AudioSource>();
         //aux.Play();
     }
@@ -96,14 +98,7 @@ public class BearController : MonoBehaviour
 
             //yield WaitForSeconds (0.25);
 
-            StopCoroutine(sleepRoutine);
-        }
-
-        if (heardSomething)
-        {
-            Debug.Log("HEARD IT");
-            
-            Debug.Log("STOPPED");
+            //StopCoroutine(sleepRoutine);
         }
 
         // If player is close to NPC and is either in FOV or has already seen the player, walk or attack
@@ -188,12 +183,15 @@ public class BearController : MonoBehaviour
         anim.SetBool("isWalking", false);
         anim.SetBool("isAttacking", false);
 
+        Debug.Log("SLEEPING");
+        yield return new WaitUntil(() => heardSomething);
+
         //Debug.Log(Time.time);
         //while (!heardSomething)
         //{
         //    yield return new WaitForSeconds(0.01f);
         //}
-        yield return null; // new WaitForSeconds(0.0f);
+        //yield return null; // new WaitForSeconds(0.0f);
         //Debug.Log(Time.time);
 
         setIdle();
