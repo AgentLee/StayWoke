@@ -87,55 +87,65 @@ public class BearController : MonoBehaviour
         bool playerAboveGrass = playerHead.transform.position.y > 11.01f;
         //Debug.Log(playerAboveGrass);
 
+
+
+        if (anim.GetBool("isSleeping"))
+        {
+            StartCoroutine(goToSleep());
+            return;
+        }
+
+
+
         // If player is close to NPC and is either in FOV or has already seen the player, walk or attack
-        if (bearRaySeesPlayer && (angle < maxSightAngle || seenPlayer) && playerAboveGrass)
-        {
-            seenPlayer = true;
+        //if (bearRaySeesPlayer && (angle < maxSightAngle || seenPlayer) && playerAboveGrass)
+        //{
+        //    seenPlayer = true;
 
-            // Have NPC rotate towards player
-            this.transform.rotation = Quaternion.Slerp(this.transform.rotation, Quaternion.LookRotation(direction), 0.1f);
+        //    // Have NPC rotate towards player
+        //    this.transform.rotation = Quaternion.Slerp(this.transform.rotation, Quaternion.LookRotation(direction), 0.1f);
 
-            //Debug.Log("Direction Length: " + directionLength);
+        //    //Debug.Log("Direction Length: " + directionLength);
 
-            if (directionLength < 5)
-            {
-                attackPlayer();
-            }
-            else
-            {
-                walkTowardsPlayer();
-            }
+        //    if (directionLength < 5)
+        //    {
+        //        attackPlayer();
+        //    }
+        //    else
+        //    {
+        //        walkTowardsPlayer();
+        //    }
 
 
 
-            // Only starts to follow within a certain distance
-            if (direction.magnitude > 3)
-            {
-                walkTowardsPlayer();
-            }
-            else
-            {
-                attackPlayer();
-            }
-        }
-        else
-        {
-            seenPlayer = false;
+        //    // Only starts to follow within a certain distance
+        //    if (direction.magnitude > 3)
+        //    {
+        //        walkTowardsPlayer();
+        //    }
+        //    else
+        //    {
+        //        attackPlayer();
+        //    }
+        //}
+        //else
+        //{
+        //    seenPlayer = false;
 
-            // This is a little buggy
-            //if ((int)Random.Range(0.0f, 1.0f) == 0)
-            //{
-            //    print("Start sleep cycle");
-            //    StartCoroutine(goToSleep());
-            //    print("Finished sleep cycle");
-            //}
-            //else
-            //{
-            //    setIdle();
-            //}
+        //    // This is a little buggy
+        //    //if ((int)Random.Range(0.0f, 1.0f) == 0)
+        //    //{
+        //    //    print("Start sleep cycle");
+        //    //    StartCoroutine(goToSleep());
+        //    //    print("Finished sleep cycle");
+        //    //}
+        //    //else
+        //    //{
+        //    //    setIdle();
+        //    //}
 
-            setIdle();
-        }
+        //    setIdle();
+        //}
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -156,7 +166,6 @@ public class BearController : MonoBehaviour
     public void setIdle()
     {
         anim.SetBool("isIdle", true);
-        anim.SetBool("prepSleep", false);
         anim.SetBool("isSleeping", false);
         anim.SetBool("isWalking", false);
         anim.SetBool("isAttacking", false);
@@ -165,13 +174,14 @@ public class BearController : MonoBehaviour
     IEnumerator goToSleep()
     {
         isSleeping = true;
-        anim.SetBool("prepSleep", true);
         anim.SetBool("isSleeping", true);
         anim.SetBool("isIdle", false);
         anim.SetBool("isWalking", false);
         anim.SetBool("isAttacking", false);
 
+        //Debug.Log(Time.time);
         yield return new WaitForSeconds(10);
+        //Debug.Log(Time.time);
 
         setIdle();
     }
