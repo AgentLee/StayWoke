@@ -26,6 +26,7 @@ public class PlayerHMDController : MonoBehaviour {
 
     void FixedUpdate()
     {
+        
         RaycastHit hit;
 
         float distToBear = (bear.position - player.transform.position).magnitude;
@@ -37,6 +38,18 @@ public class PlayerHMDController : MonoBehaviour {
         {
             canHearBear = true;
         }
+        //Debug.Log(distToBear);
+
+        //canHearBear = Physics.Raycast(player.transform.position, bear.position - player.transform.position, out hit, 8.0f);
+
+        if(!aux.isPlaying && distToBear < 5.0f)
+        {
+            aux.Play();
+        } else if(aux.isPlaying && distToBear >= 5.0f)
+        {
+            aux.Stop();
+        }
+
 
         //if (canHearBear && !aux.isPlaying)
         //{

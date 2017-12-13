@@ -8,6 +8,7 @@ public class BearController : MonoBehaviour
     public GameObject player;
     public CapsuleCollider player_collider;
     public float collider_radius;
+    public Transform playerHead;
     // NPC
     public Transform head;
     public Animator anim;
@@ -37,16 +38,7 @@ public class BearController : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        if(player.GetComponent<PlayerHMDController>().canHearBear && !audio.isPlaying)
-        {
-            Debug.Log("DETECTS PLAYER");
-            aux.Play();
-        }
-        else
-        {
-            aux.Stop();
-        }
-
+        
         Vector3 direction = player.transform.position - this.transform.position;
         // Prevent NPC from tipping over when you get too close 
         direction.y = 0;
@@ -79,14 +71,24 @@ public class BearController : MonoBehaviour
         Vector3 rayDirectionLeft = playerPositionLeft - eyeTransform.position;
         Vector3 rayDirectionRight = playerPositionRight - eyeTransform.position;
 
-        bool player_seen = Physics.Raycast(eyeTransform.position, rayDirectionCenter, out hit, maxSightDistance) ||
+        bool bearRaySeesPlayer = Physics.Raycast(eyeTransform.position, rayDirectionCenter, out hit, maxSightDistance) ||
                            Physics.Raycast(eyeTransform.position, rayDirectionLeft, out hit, maxSightDistance) ||
                            Physics.Raycast(eyeTransform.position, rayDirectionRight, out hit, maxSightDistance);
 
-        player_seen = hit.collider == player_collider;
+        bearRaySeesPlayer = hit.collider == player_collider;
+
+
+        //Debug.Log("HEIGHT: " + playerHead.position.y);
+
+
+        //float bearDotPlayer = Vector3.Dot(playerHead.forward, -this.transform.forward);
+        //Debug.Log("Dot: " + bearDotPlayer);
+
+        bool playerAboveGrass = playerHead.transform.position.y > 11.01f;
+        //Debug.Log(playerAboveGrass);
 
         // If player is close to NPC and is either in FOV or has already seen the player, walk or attack
-        if (player_seen && (angle < maxSightAngle || seenPlayer))
+        if (bearRaySeesPlayer && (angle < maxSightAngle || seenPlayer) && playerAboveGrass)
         {
             seenPlayer = true;
 
