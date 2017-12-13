@@ -2749,7 +2749,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400064, guid: a87f748f1cf8ad94aad84f19c47c7455, type: 3}
       propertyPath: m_RootOrder
-      value: 8
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 400064, guid: a87f748f1cf8ad94aad84f19c47c7455, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
@@ -2831,6 +2831,10 @@ Prefab:
       propertyPath: m_AABB.m_Extent.z
       value: 0.68832445
       objectReference: {fileID: 0}
+    - target: {fileID: 13700000, guid: a87f748f1cf8ad94aad84f19c47c7455, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 7727fd1abc08ed242a294bebcd1e54be, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a87f748f1cf8ad94aad84f19c47c7455, type: 3}
   m_IsPrefabParent: 0
@@ -3035,6 +3039,8 @@ MonoBehaviour:
   items: []
   item0: {fileID: 0}
   item1: {fileID: 0}
+  item2: {fileID: 0}
+  player: {fileID: 0}
   canGetToObject: 0
 --- !u!1 &335974568
 GameObject:
@@ -4225,7 +4231,7 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.65
+  m_Radius: 0.25
   m_Height: 0
   m_Direction: 1
   m_Center: {x: 0, y: 0.01, z: 0}
@@ -6187,7 +6193,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4785589304264874, guid: 443f8b933795036468996adeb032258c, type: 2}
       propertyPath: m_RootOrder
-      value: 11
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 1999968542418736, guid: 443f8b933795036468996adeb032258c, type: 2}
       propertyPath: m_Name
@@ -14028,7 +14034,7 @@ Transform:
   - {fileID: 1260589376}
   - {fileID: 13809802}
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: -64.84901, z: 0}
 --- !u!1 &1572652541
 GameObject:
@@ -16570,7 +16576,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1887184215}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -17.71, y: -2, z: -13.93}
+  m_LocalPosition: {x: -22.739, y: -2, z: -17.98}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 739085191}
@@ -19052,7 +19058,7 @@ Transform:
   m_Children:
   - {fileID: 1573252647}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2130023986
 GameObject:

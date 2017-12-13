@@ -13,12 +13,17 @@ public class NPCMove : MonoBehaviour
     public List<GameObject> items;
     public GameObject item0;
     public GameObject item1;
+    public GameObject item2;
+
+    public GameObject player;
 
     public bool canGetToObject;
     private Vector3 targetDestination;
 
 	// Use this for initialization
 	void Start () {
+        //player = GetComponent<PlayerHMDController>().gameObject;
+
         _navMeshAgent = this.GetComponent<NavMeshAgent>();
         _navMeshAgent.stoppingDistance = 1.5f;
 		_navMeshAgent.acceleration = 0.5f;
@@ -31,6 +36,11 @@ public class NPCMove : MonoBehaviour
         item1 = Instantiate(Resources.Load("FixedJointGrab_Cube")) as GameObject;
         item1.transform.position = new Vector3(80.0f, 10.075f, 90.78f);
         items.Add(item1);
+
+        //item2 = Instantiate(Resources.Load("FixedJointGrab_Cube")) as GameObject;
+        //item2.tag = "porridge";
+        //item2.transform.position = new Vector3(70.0f, 10.0f, 103.0f);
+        //items.Add(item2);
 
         _destination = item0.transform;
 
@@ -50,6 +60,7 @@ public class NPCMove : MonoBehaviour
             {
                 item0.GetComponent<CollisionSound>().thrown = false;
                 item1.GetComponent<CollisionSound>().thrown = false;
+                //item2.GetComponent<CollisionSound>().thrown = false;
             }
         }
     }
@@ -82,6 +93,7 @@ public class NPCMove : MonoBehaviour
                 canGetToObject = false;
                 item0.GetComponent<CollisionSound>().thrown = false;
                 item1.GetComponent<CollisionSound>().thrown = false;
+                //item2.GetComponent<CollisionSound>().thrown = false;
             }
 
             // Basically need to listen for the objects that fall and make sounds.

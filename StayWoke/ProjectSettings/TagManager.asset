@@ -9,6 +9,7 @@ TagManager:
   - TeleportIgnore
   - redCube
   - Terrain
+  - porridge
   layers:
   - Default
   - TransparentFX
