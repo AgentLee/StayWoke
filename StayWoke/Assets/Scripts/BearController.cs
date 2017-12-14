@@ -73,6 +73,8 @@ public class BearController : MonoBehaviour
 
         if(pokedBear)
         {
+			//Debug.Log ("POKE");
+			
             // Orient bear towards player
             Vector3 targetDir = player.transform.position - this.transform.position;
             float step =  0.45f * Time.deltaTime;
@@ -177,6 +179,12 @@ public class BearController : MonoBehaviour
     public void attackPlayer()
     {
         anim.SetBool("isAttacking", true);
+		int attackType = (int)Random.Range (1, 5);
+		if (attackType == 5) {
+			attackType = 4;
+		}
+		Debug.Log (attackType);
+		anim.SetInteger ("attackType", attackType);//(int)Random.Range(0, 3));
         anim.SetBool("isIdle", false);
         anim.SetBool("isSleeping", false);
         anim.SetBool("isWalking", false);

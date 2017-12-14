@@ -7,6 +7,8 @@ public class Global : MonoBehaviour {
 	public static Global instance = null;
 	public GameObject winText;
 
+	public float resetDelay;
+
 	void Awake()
 	{
 		if (instance == null) {
@@ -29,5 +31,13 @@ public class Global : MonoBehaviour {
 	public void Win()
 	{
 		winText.SetActive (true);
+		Time.timeScale = 1.0f;
+		Invoke ("Reset", 10);
+	}
+
+	public void Reset()
+	{
+		Time.timeScale = 1.0f;
+		Application.LoadLevel (Application.loadedLevel);
 	}
 }

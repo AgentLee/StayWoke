@@ -1704,8 +1704,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 3.0610003, y: 3.8547678, z: 1.712486}
-  m_Center: {x: -6.600902, y: -0.8053298, z: 25.988918}
+  m_Size: {x: 2.6501548, y: 3.8547678, z: 3.5435252}
+  m_Center: {x: -6.3955126, y: -0.8053298, z: 26.904467}
 --- !u!1 &230893422
 GameObject:
   m_ObjectHideFlags: 0
@@ -3134,8 +3134,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.7849046, y: 1.3803713, z: 1.6742942}
-  m_Center: {x: 0.10754777, y: 0.67011577, z: 0.0076919287}
+  m_Size: {x: 1.2701993, y: 1.3803713, z: 1.6742942}
+  m_Center: {x: 0.053594377, y: 0.67011577, z: 0.007691927}
 --- !u!65 &326738982
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -7475,6 +7475,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   winText: {fileID: 333370682}
+  resetDelay: 0
 --- !u!1 &739085190
 GameObject:
   m_ObjectHideFlags: 0
@@ -10029,11 +10030,11 @@ MonoBehaviour:
   autoManageVRSettings: 1
   autoLoadSetup: 1
   setups:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 1865498929}
+  - {fileID: 1841856937}
+  - {fileID: 126465769}
   - {fileID: 739085192}
-  - {fileID: 0}
+  - {fileID: 420083533}
 --- !u!1 &1052431140
 GameObject:
   m_ObjectHideFlags: 0
@@ -17069,7 +17070,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1887184215}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -21.227, y: -2, z: 0.363}
+  m_LocalPosition: {x: -20.52, y: -2, z: -17}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 739085191}
