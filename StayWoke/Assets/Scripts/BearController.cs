@@ -30,11 +30,6 @@ public class BearController : MonoBehaviour
         heardSomething = false;
     }
 
-    //IEnumerator turnToPlayer()
-    //{
-
-    //}
-
     // Update is called once per frame
     void FixedUpdate()
     {
@@ -50,7 +45,6 @@ public class BearController : MonoBehaviour
 
         // Do ray casts to check if the player can actually be seen
         RaycastHit hit;
-
         Vector3 playerPositionCenter    = player.transform.position;
         Vector3 playerPositionLeft      = player.transform.position + eyeTransform.right * collider_radius;
         Vector3 playerPositionRight     = player.transform.position - eyeTransform.right * collider_radius;
