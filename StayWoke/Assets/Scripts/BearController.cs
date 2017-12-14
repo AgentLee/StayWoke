@@ -80,76 +80,65 @@ public class BearController : MonoBehaviour
 
         bearRaySeesPlayer = hit.collider == player_collider;
 
-
-        //Debug.Log("HEIGHT: " + playerHead.position.y);
-
-
-        //float bearDotPlayer = Vector3.Dot(playerHead.forward, -this.transform.forward);
-        //Debug.Log("Dot: " + bearDotPlayer);
-
         bool playerAboveGrass = playerHead.transform.position.y > 11.01f;
-        //Debug.Log(playerAboveGrass);
 
+        // This should be the start state
         Coroutine sleepRoutine;
-
         if (anim.GetBool("isSleeping"))
         {
             sleepRoutine = StartCoroutine(goToSleep());
-
-            //yield WaitForSeconds (0.25);
-
-            //StopCoroutine(sleepRoutine);
+            return;
         }
 
         // If player is close to NPC and is either in FOV or has already seen the player, walk or attack
-        //if (bearRaySeesPlayer && (angle < maxSightAngle || seenPlayer) && playerAboveGrass)
-        //{
-        //    seenPlayer = true;
+        if (bearRaySeesPlayer && (angle < maxSightAngle || seenPlayer) && playerAboveGrass)
+        {
+            seenPlayer = true;
 
-        //    // Have NPC rotate towards player
-        //    this.transform.rotation = Quaternion.Slerp(this.transform.rotation, Quaternion.LookRotation(direction), 0.1f);
+            // Have NPC rotate towards player
+            this.transform.rotation = Quaternion.Slerp(this.transform.rotation, Quaternion.LookRotation(direction), 0.1f);
 
-        //    //Debug.Log("Direction Length: " + directionLength);
+            //Debug.Log("Direction Length: " + directionLength);
 
-        //    if (directionLength < 5)
-        //    {
-        //        attackPlayer();
-        //    }
-        //    else
-        //    {
-        //        walkTowardsPlayer();
-        //    }
+            if (directionLength < 5)
+            {
+                attackPlayer();
+            }
+            else
+            {
+                walkTowardsPlayer();
+            }
 
 
 
-        //    // Only starts to follow within a certain distance
-        //    if (direction.magnitude > 3)
-        //    {
-        //        walkTowardsPlayer();
-        //    }
-        //    else
-        //    {
-        //        attackPlayer();
-        //    }
-        //}
-        //else
-        //{
-        //    seenPlayer = false;
+            // Only starts to follow within a certain distance
+            if (direction.magnitude > 3)
+            {
+                walkTowardsPlayer();
+            }
+            else
+            {
+                attackPlayer();
+            }
+        }
+        else
+        {
+            seenPlayer = false;
 
-        //    // This is a little buggy
-        //    //if ((int)Random.Range(0.0f, 1.0f) == 0)
-        //    //{
-        //    //    print("Start sleep cycle");
-        //    //    StartCoroutine(goToSleep());
-        //    //    print("Finished sleep cycle");
-        //    //}
-        //    //else
-        //    //{
-        //    //    setIdle();
-        //    //}
+            // This is a little buggy
+            //if ((int)Random.Range(0.0f, 1.0f) == 0)
+            //{
+            //    print("Start sleep cycle");
+            //    StartCoroutine(goToSleep());
+            //    print("Finished sleep cycle");
+            //}
+            //else
+            //{
+            //    setIdle();
+            //}
 
-        //    setIdle();
-        //}
+            setIdle();
+        }
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -169,6 +158,7 @@ public class BearController : MonoBehaviour
     }
     public void setIdle()
     {
+        isSleeping = false;
         anim.SetBool("isIdle", true);
         anim.SetBool("isSleeping", false);
         anim.SetBool("isWalking", false);
