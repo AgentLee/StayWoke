@@ -12,12 +12,10 @@ public class BearController : MonoBehaviour
     // NPC
     public Transform head;
     public Animator anim;
-    public float maxSightDistance;
     public float maxSightAngle;
     public Transform eyeTransform;
 
-    public AudioSource audio;
-
+    public bool pokedBear;
     public bool isSleeping     = false;
     public bool seenPlayer     = false;
     public bool isWalking      = false;
@@ -28,46 +26,42 @@ public class BearController : MonoBehaviour
     {
         anim = GetComponent<Animator>();
         collider_radius = player_collider.radius;
-        audio = GetComponent<AudioSource>();
         heardSomething = false;
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        Vector3 direction = player.transform.position - this.transform.position;
+        Vector3 direction       = player.transform.position - this.transform.position;
         // Prevent NPC from tipping over when you get too close 
-        direction.y = 0;
-
-        float distanceToPlayer = Vector3.Distance(player.transform.position, this.transform.position);
-        //Debug.Log("Distance to player: " + distanceToPlayer);
-
+        direction.y             = 0;
+        float directionLength   = direction.magnitude;
+        float distanceToPlayer  = Vector3.Distance(player.transform.position, this.transform.position);
         // Basically get FOV from NPC head
-        float angle = Vector3.Angle(direction, head.up);
-        //Debug.Log("FOV to player: " + angle);
+        float angle             = Vector3.Angle(direction, head.up);
 
-        float directionLength = direction.magnitude;
-
-        //Do ray casts to check if the player can actually be seen
         float maxSightDistance = 10.0f;
 
+        // Do ray casts to check if the player can actually be seen
         RaycastHit hit;
 
         Vector3 playerPositionCenter    = player.transform.position;
         Vector3 playerPositionLeft      = player.transform.position + eyeTransform.right * collider_radius;
         Vector3 playerPositionRight     = player.transform.position - eyeTransform.right * collider_radius;
-
-        Vector3 rayDirectionCenter = playerPositionCenter - eyeTransform.position;
-        Vector3 rayDirectionLeft = playerPositionLeft - eyeTransform.position;
-        Vector3 rayDirectionRight = playerPositionRight - eyeTransform.position;
+        Vector3 rayDirectionCenter      = playerPositionCenter - eyeTransform.position;
+        Vector3 rayDirectionLeft        = playerPositionLeft - eyeTransform.position;
+        Vector3 rayDirectionRight       = playerPositionRight - eyeTransform.position;
 
         bool bearRaySeesPlayer = Physics.Raycast(eyeTransform.position, rayDirectionCenter, out hit, maxSightDistance) ||
                            Physics.Raycast(eyeTransform.position, rayDirectionLeft, out hit, maxSightDistance) ||
                            Physics.Raycast(eyeTransform.position, rayDirectionRight, out hit, maxSightDistance);
-
+        
+        // Check to see if there's an object in between the bear and the player from the previous raycasts
         bearRaySeesPlayer = hit.collider == player_collider;
 
-        bool playerAboveGrass = playerHead.transform.position.y > 11.01f;
+        // Checks to see if the player is above the grass
+        // Might have to make this a user defined parameter
+        bool playerAboveGrass = playerHead.transform.position.y > 11f;
 
         // This should be the start state
         Coroutine sleepRoutine;
@@ -77,8 +71,10 @@ public class BearController : MonoBehaviour
             return;
         }
 
-        if(hitBear)
+        if(pokedBear)
         {
+            // Orient bear towards player
+            this.transform.LookAt(player.transform);
             attackPlayer();
             return;
         }
@@ -120,26 +116,12 @@ public class BearController : MonoBehaviour
         }
     }
 
-    public bool hitBear;
     private void OnTriggerEnter(Collider other)
     {
-        if(other.tag == "Player" || other.tag == "Left" || other.tag == "Right")
+        // For whatever reason, I can't call attackPlayer() here.
+        if(other.tag == "Left" || other.tag == "Right")
         {
-            hitBear = true;
-            //Coroutine sleepRoutine;
-            //if (anim.GetBool("isSleeping"))
-            //{
-            //    sleepRoutine = StartCoroutine(goToSleep());
-            //    return;
-            //}
-            //attackPlayer();
-            // Add bear animation here
-            //Debug.Log(other.tag);
-            //Debug.Log("GAME OVER");
-        }
-        else
-        {
-
+            pokedBear = true;
         }
     }
     public void setIdle()
