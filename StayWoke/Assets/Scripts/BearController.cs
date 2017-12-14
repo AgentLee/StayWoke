@@ -40,7 +40,8 @@ public class BearController : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        
+        Debug.Log(heardSomething);
+
         Vector3 direction = player.transform.position - this.transform.position;
         // Prevent NPC from tipping over when you get too close 
         direction.y = 0;
@@ -81,8 +82,28 @@ public class BearController : MonoBehaviour
 
         bool playerAboveGrass = playerHead.transform.position.y > 11.01f;
 
-        // This should be the start state
-        Coroutine sleepRoutine;
+        //if(player.GetComponent<PlayerHMDController>().movingState == 3)
+        //{
+        //    //Debug.Log("RUNNING");
+
+        //    heardSomething = true;
+        //}
+        //else
+        //{
+        //    //Debug.Log("NO");
+        //}
+
+        //if(player.GetComponent<PlayerHMDController>().movingState == 3 || player.GetComponent<PlayerHMDController>().movingState == 4)
+        //{
+        //    Debug.Log("WAKE THE BEAR UP, IT CAN HEAR THE RUNNING");
+        //}
+        //else
+        //{
+        //    Debug.Log("DJLKFJLS");
+        //}
+
+            // This should be the start state
+            Coroutine sleepRoutine;
         if (anim.GetBool("isSleeping"))
         {
             sleepRoutine = StartCoroutine(goToSleep());
@@ -140,8 +161,6 @@ public class BearController : MonoBehaviour
                 walkTowardsPlayer();
             }
 
-
-
             // Only starts to follow within a certain distance
             if (direction.magnitude > 3)
             {
@@ -155,18 +174,6 @@ public class BearController : MonoBehaviour
         else
         {
             seenPlayer = false;
-
-            // This is a little buggy
-            //if ((int)Random.Range(0.0f, 1.0f) == 0)
-            //{
-            //    print("Start sleep cycle");
-            //    StartCoroutine(goToSleep());
-            //    print("Finished sleep cycle");
-            //}
-            //else
-            //{
-            //    setIdle();
-            //}
 
             setIdle();
         }

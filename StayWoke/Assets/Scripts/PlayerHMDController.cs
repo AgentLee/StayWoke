@@ -30,6 +30,8 @@ public class PlayerHMDController : MonoBehaviour
         // We need this for debugging.
         aux = GetComponent<AudioSource>();
         player.layer = 0;
+        movingState = 0;
+        speed = 0;
     }
 
     // Update is called once per frame
@@ -37,12 +39,32 @@ public class PlayerHMDController : MonoBehaviour
 		
 	}
 
+    IEnumerator delaySpeed()
+    {
+        Debug.Log(Time.time);
+        yield return new WaitForSecondsRealtime(6);
+        Debug.Log(Time.time);
+        startSpeed = false;
+        speed = (player.transform.position - lastPos).magnitude / Time.deltaTime;
+        lastPos = player.transform.position;
+    }
+
+    public bool startSpeed = true;
     void FixedUpdate()
     {
-        //Debug.Log("SPEED: " + (player.transform.position - lastPos).magnitude);
-        speed = (player.transform.position - lastPos).magnitude / Time.deltaTime;
-        //Debug.Log(speed);
-        lastPos = player.transform.position;
+        if(startSpeed)
+        {
+            StartCoroutine(delaySpeed());
+        }
+        else
+        {
+            //Debug.Log("SPEED: " + (player.transform.position - lastPos).magnitude);
+            speed = (player.transform.position - lastPos).magnitude / Time.deltaTime;
+            lastPos = player.transform.position;
+        }
+
+        Debug.Log("Speed: " + speed);
+
         float distToBear = (bear.transform.position - player.transform.position).magnitude;
         //Debug.Log("distance to bear"+distToBear);
 
@@ -54,30 +76,54 @@ public class PlayerHMDController : MonoBehaviour
         //float rightSpeed = (right.transform.position - lastRightPos).magnitude;
         //speed = (leftSpeed + rightSpeed) / 2;
 
-        if (speed >= 1.75)
+        if (speed > 1.6f)
         {
-            // Running
-            movingState = 3;
-        }
-        else if (speed >= 1.3 && speed <= 1.7499999999)
-        {
-            movingState = 4;
-        }
-        else if (speed >= 1.0)
-        {
-            // Walking
-            movingState = 2;
-        }
-        else if (speed >= 0.05)
-        {
-            // Tiptoe
-            movingState = 1;
+            //Debug.Log("LOUD " + speed);
+            bear.GetComponent<BearController>().heardSomething = true;
         }
         else
         {
-            // In place
-            movingState = 0;
+            //Debug.Log("QUIET " + speed);
+            bear.GetComponent<BearController>().heardSomething = false;
         }
+
+        //if (speed > 2.0)
+        //{
+        //    movingState = 3;
+        //} else
+        //{
+        //    movingState = 0;
+        //}
+
+        //if (speed >= 1.75)
+        //{
+        //    // Running
+        //    movingState = 3;
+        //    Debug.Log("RUNNING: " + speed);
+        //}
+        //else if (speed >= 1.3 && speed <= 1.7499999999)
+        //{
+        //    movingState = 4;
+        //    Debug.Log("POWER WALK: " + speed);
+        //}
+        //else if (speed >= 1.0)
+        //{
+        //    // Walking
+        //    movingState = 2;
+        //    Debug.Log("WALKING: " + speed);
+        //}
+        //else if (speed >= 0.05)
+        //{
+        //    // Tiptoe
+        //    movingState = 1;
+        //    Debug.Log("TIPTOE: " + speed);
+        //}
+        //else
+        //{
+        //    // In place
+        //    movingState = 0;
+        //    Debug.Log("IN PLACE: " + speed);
+        //}
 
         //if (speed > 0.01)
         //{
