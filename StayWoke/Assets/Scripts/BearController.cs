@@ -20,6 +20,7 @@ public class BearController : MonoBehaviour
     public bool seenPlayer     = false;
     public bool isWalking      = false;
     public bool heardSomething = false;
+    public bool facingPlayer = false;
 
     // Use this for initialization
     void Start()
@@ -28,6 +29,11 @@ public class BearController : MonoBehaviour
         collider_radius = player_collider.radius;
         heardSomething = false;
     }
+
+    //IEnumerator turnToPlayer()
+    //{
+
+    //}
 
     // Update is called once per frame
     void FixedUpdate()
@@ -73,9 +79,13 @@ public class BearController : MonoBehaviour
 
         if(pokedBear)
         {
-            Debug.Log("POKE");
             // Orient bear towards player
-            //this.transform.LookAt(player.transform);
+            Vector3 targetDir = player.transform.position - this.transform.position;
+            float step =  0.45f * Time.deltaTime;
+            Vector3 newDir = Vector3.RotateTowards(transform.forward, targetDir, step, 0.0F);
+            this.transform.rotation = Quaternion.LookRotation(newDir);
+
+			// Attack player once the bear is facing the bear
             attackPlayer();
             return;
         }
