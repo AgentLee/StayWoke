@@ -73,8 +73,9 @@ public class BearController : MonoBehaviour
 
         if(pokedBear)
         {
+            Debug.Log("POKE");
             // Orient bear towards player
-            this.transform.LookAt(player.transform);
+            //this.transform.LookAt(player.transform);
             attackPlayer();
             return;
         }
@@ -121,6 +122,7 @@ public class BearController : MonoBehaviour
         // For whatever reason, I can't call attackPlayer() here.
         if(other.tag == "Left" || other.tag == "Right")
         {
+            //Debug.Log(other.tag);
             pokedBear = true;
         }
     }
