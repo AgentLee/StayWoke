@@ -41,9 +41,9 @@ public class PlayerHMDController : MonoBehaviour
 
     IEnumerator delaySpeed()
     {
-        Debug.Log(Time.time);
+        //Debug.Log(Time.time);
         yield return new WaitForSecondsRealtime(6);
-        Debug.Log(Time.time);
+        //Debug.Log(Time.time);
         startSpeed = false;
         speed = (player.transform.position - lastPos).magnitude / Time.deltaTime;
         lastPos = player.transform.position;
@@ -63,7 +63,7 @@ public class PlayerHMDController : MonoBehaviour
             lastPos = player.transform.position;
         }
 
-        Debug.Log("Speed: " + speed);
+        //Debug.Log("Speed: " + speed);
 
         float distToBear = (bear.transform.position - player.transform.position).magnitude;
         //Debug.Log("distance to bear"+distToBear);

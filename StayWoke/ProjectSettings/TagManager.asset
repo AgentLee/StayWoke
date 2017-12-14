@@ -10,6 +10,8 @@ TagManager:
   - redCube
   - Terrain
   - porridge
+  - Left
+  - Right
   layers:
   - Default
   - TransparentFX

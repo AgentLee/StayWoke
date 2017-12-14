@@ -17,7 +17,6 @@ public class BearController : MonoBehaviour
     public Transform eyeTransform;
 
     public AudioSource audio;
-    public AudioSource aux;
 
     public bool isSleeping     = false;
     public bool seenPlayer     = false;
@@ -29,28 +28,16 @@ public class BearController : MonoBehaviour
     {
         anim = GetComponent<Animator>();
         collider_radius = player_collider.radius;
-
         audio = GetComponent<AudioSource>();
-
         heardSomething = false;
-        ////aux = GetComponent<AudioSource>();
-        //aux.Play();
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        Debug.Log(heardSomething);
-
         Vector3 direction = player.transform.position - this.transform.position;
         // Prevent NPC from tipping over when you get too close 
         direction.y = 0;
-
-        //if(anim.GetBool("isSleeping"))
-        //{
-        //    StartCoroutine(goToSleep());
-        //    return;
-        //}
 
         float distanceToPlayer = Vector3.Distance(player.transform.position, this.transform.position);
         //Debug.Log("Distance to player: " + distanceToPlayer);
@@ -82,66 +69,20 @@ public class BearController : MonoBehaviour
 
         bool playerAboveGrass = playerHead.transform.position.y > 11.01f;
 
-        //if(player.GetComponent<PlayerHMDController>().movingState == 3)
-        //{
-        //    //Debug.Log("RUNNING");
-
-        //    heardSomething = true;
-        //}
-        //else
-        //{
-        //    //Debug.Log("NO");
-        //}
-
-        //if(player.GetComponent<PlayerHMDController>().movingState == 3 || player.GetComponent<PlayerHMDController>().movingState == 4)
-        //{
-        //    Debug.Log("WAKE THE BEAR UP, IT CAN HEAR THE RUNNING");
-        //}
-        //else
-        //{
-        //    Debug.Log("DJLKFJLS");
-        //}
-
-            // This should be the start state
-            Coroutine sleepRoutine;
+        // This should be the start state
+        Coroutine sleepRoutine;
         if (anim.GetBool("isSleeping"))
         {
             sleepRoutine = StartCoroutine(goToSleep());
             return;
         }
 
-
-        //switch(player.GetComponent<PlayerHMDController>().movingState)
-        //{
-        //    case 4:
-        //        Debug.Log("POWER WALK");
-        //        break;
-        //    case 3:
-        //        Debug.Log("RUNNING");
-        //        break;
-        //    case 2:
-        //        Debug.Log("WALKING");
-        //        break;
-        //    case 1:
-        //        Debug.Log("TIPTOEING");
-        //        break;
-        //    case 0:
-        //        Debug.Log("NOT MOVING");
-        //        break;
-        //    default:
-        //        break;
-        //}
-
-
-        //if(player.GetComponent<PlayerHMDController>().movingState == 3)
-        //{
-        //    Debug.Log("PLAYER RUNNING");
-        //}
-        //else
-        //{
-        //    Debug.Log("NOPE");
-        //}
-
+        if(hitBear)
+        {
+            attackPlayer();
+            return;
+        }
+        
         // If player is close to NPC and is either in FOV or has already seen the player, walk or attack
         if (bearRaySeesPlayer && (angle < maxSightAngle || seenPlayer) && (playerAboveGrass))
         {
@@ -178,20 +119,27 @@ public class BearController : MonoBehaviour
             setIdle();
         }
     }
+
+    public bool hitBear;
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Player")
+        if(other.tag == "Player" || other.tag == "Left" || other.tag == "Right")
         {
-            if (audio.isPlaying)
-            {
-                audio.Stop();
-                Debug.Log("PLAYER");
-                audio.Play();
-            }
-            else
-            {
-                audio.Play();
-            }
+            hitBear = true;
+            //Coroutine sleepRoutine;
+            //if (anim.GetBool("isSleeping"))
+            //{
+            //    sleepRoutine = StartCoroutine(goToSleep());
+            //    return;
+            //}
+            //attackPlayer();
+            // Add bear animation here
+            //Debug.Log(other.tag);
+            //Debug.Log("GAME OVER");
+        }
+        else
+        {
+
         }
     }
     public void setIdle()
@@ -213,14 +161,6 @@ public class BearController : MonoBehaviour
 
         //Debug.Log("SLEEPING");
         yield return new WaitUntil(() => heardSomething);
-
-        //Debug.Log(Time.time);
-        //while (!heardSomething)
-        //{
-        //    yield return new WaitForSeconds(0.01f);
-        //}
-        //yield return null; // new WaitForSeconds(0.0f);
-        //Debug.Log(Time.time);
 
         setIdle();
     }
@@ -248,9 +188,9 @@ public class BearController : MonoBehaviour
 
     public void attackPlayer()
     {
+        anim.SetBool("isAttacking", true);
         anim.SetBool("isIdle", false);
         anim.SetBool("isSleeping", false);
-        anim.SetBool("isAttacking", true);
         anim.SetBool("isWalking", false);
     }
 }
