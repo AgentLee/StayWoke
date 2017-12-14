@@ -4252,9 +4252,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 439888018}
-  bear: {fileID: 326738977}
+  bear: {fileID: 326738975}
   thisPlayer: {fileID: 1968513428}
   aux: {fileID: 439888026}
+  lastPos: {x: 0, y: 0, z: 0}
+  lastLeftPos: {x: 0, y: 0, z: 0}
+  lastRightPos: {x: 0, y: 0, z: 0}
+  VRTK: {fileID: 1518542835}
+  left: {fileID: 1844720272}
+  right: {fileID: 1178459135}
+  movingState: 0
+  speed: 0
   canHearBear: 0
 --- !u!114 &439888021
 MonoBehaviour:
@@ -16623,7 +16631,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1887184215}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -28.24, y: -2, z: -3.58}
+  m_LocalPosition: {x: -28.24, y: -2, z: -10.25}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 739085191}
@@ -17119,12 +17127,12 @@ Prefab:
     - target: {fileID: 224000013127654674, guid: d46cf6b1ad9d84a48ae7548a2a6b41b3,
         type: 2}
       propertyPath: m_LocalPosition.x
-      value: 117.77
+      value: 222.76999
       objectReference: {fileID: 0}
     - target: {fileID: 224000013127654674, guid: d46cf6b1ad9d84a48ae7548a2a6b41b3,
         type: 2}
       propertyPath: m_LocalPosition.y
-      value: 80.479996
+      value: 127.479996
       objectReference: {fileID: 0}
     - target: {fileID: 224000013127654674, guid: d46cf6b1ad9d84a48ae7548a2a6b41b3,
         type: 2}
@@ -17524,12 +17532,12 @@ Prefab:
     - target: {fileID: 224000012623161658, guid: d46cf6b1ad9d84a48ae7548a2a6b41b3,
         type: 2}
       propertyPath: m_LocalPosition.x
-      value: 134
+      value: 239
       objectReference: {fileID: 0}
     - target: {fileID: 224000012623161658, guid: d46cf6b1ad9d84a48ae7548a2a6b41b3,
         type: 2}
       propertyPath: m_LocalPosition.y
-      value: -93.5
+      value: 70.5
       objectReference: {fileID: 0}
     - target: {fileID: 224000012484682510, guid: d46cf6b1ad9d84a48ae7548a2a6b41b3,
         type: 2}

@@ -32,7 +32,6 @@ public class BearController : MonoBehaviour
 
         audio = GetComponent<AudioSource>();
 
-
         heardSomething = false;
         ////aux = GetComponent<AudioSource>();
         //aux.Play();
@@ -90,8 +89,40 @@ public class BearController : MonoBehaviour
             return;
         }
 
+
+        //switch(player.GetComponent<PlayerHMDController>().movingState)
+        //{
+        //    case 4:
+        //        Debug.Log("POWER WALK");
+        //        break;
+        //    case 3:
+        //        Debug.Log("RUNNING");
+        //        break;
+        //    case 2:
+        //        Debug.Log("WALKING");
+        //        break;
+        //    case 1:
+        //        Debug.Log("TIPTOEING");
+        //        break;
+        //    case 0:
+        //        Debug.Log("NOT MOVING");
+        //        break;
+        //    default:
+        //        break;
+        //}
+
+
+        //if(player.GetComponent<PlayerHMDController>().movingState == 3)
+        //{
+        //    Debug.Log("PLAYER RUNNING");
+        //}
+        //else
+        //{
+        //    Debug.Log("NOPE");
+        //}
+
         // If player is close to NPC and is either in FOV or has already seen the player, walk or attack
-        if (bearRaySeesPlayer && (angle < maxSightAngle || seenPlayer) && playerAboveGrass)
+        if (bearRaySeesPlayer && (angle < maxSightAngle || seenPlayer) && (playerAboveGrass))
         {
             seenPlayer = true;
 
@@ -173,7 +204,7 @@ public class BearController : MonoBehaviour
         anim.SetBool("isWalking", false);
         anim.SetBool("isAttacking", false);
 
-        Debug.Log("SLEEPING");
+        //Debug.Log("SLEEPING");
         yield return new WaitUntil(() => heardSomething);
 
         //Debug.Log(Time.time);

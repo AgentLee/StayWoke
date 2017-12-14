@@ -128,7 +128,7 @@ public class NPCMove : MonoBehaviour
             // Basically need to listen for the objects that fall and make sounds.
             if (canGetToObject)
             {
-                Debug.Log("CANCANCANCAN");
+                //Debug.Log("CANCANCANCAN");
 
                 bearController.GetComponent<BearController>().heardSomething = true;
                 bearController.GetComponent<BearController>().walkTowardsObject();

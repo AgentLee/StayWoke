@@ -2,13 +2,26 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerHMDController : MonoBehaviour {
+enum State { notMoving, walking, running };
 
+public class PlayerHMDController : MonoBehaviour
+{
     public GameObject player;
-    public Transform bear;
+    public GameObject bear;
     public Transform thisPlayer;
     public AudioSource aux;
+    public Vector3 lastPos;
+    public Vector3 lastLeftPos;
+    public Vector3 lastRightPos;
+    public GameObject VRTK;
 
+    public GameObject left;
+    public GameObject right;
+
+    State state;
+    public int movingState;
+
+    public float speed;
     public bool canHearBear;
 
 	// Use this for initialization
@@ -26,18 +39,79 @@ public class PlayerHMDController : MonoBehaviour {
 
     void FixedUpdate()
     {
-        
-        RaycastHit hit;
+        //Debug.Log("SPEED: " + (player.transform.position - lastPos).magnitude);
+        speed = (player.transform.position - lastPos).magnitude / Time.deltaTime;
+        //Debug.Log(speed);
+        lastPos = player.transform.position;
+        float distToBear = (bear.transform.position - player.transform.position).magnitude;
+        //Debug.Log("distance to bear"+distToBear);
 
-        float distToBear = (bear.position - player.transform.position).magnitude;
-        if(distToBear > 8.0)
+        // Power walk - 1.5
+        // Running - 2
+        // Walk - 1.3
+
+        //float leftSpeed = (left.transform.position - lastLeftPos).magnitude;
+        //float rightSpeed = (right.transform.position - lastRightPos).magnitude;
+        //speed = (leftSpeed + rightSpeed) / 2;
+
+        if (speed >= 1.75)
         {
-            canHearBear = false;
+            // Running
+            movingState = 3;
+        }
+        else if (speed >= 1.3 && speed <= 1.7499999999)
+        {
+            movingState = 4;
+        }
+        else if (speed >= 1.0)
+        {
+            // Walking
+            movingState = 2;
+        }
+        else if (speed >= 0.05)
+        {
+            // Tiptoe
+            movingState = 1;
         }
         else
         {
-            canHearBear = true;
+            // In place
+            movingState = 0;
         }
+
+        //if (speed > 0.01)
+        //{
+        //    state = State.running;
+        //    movingState = 2;
+
+        //    if(distToBear < 6.0f)
+        //    {
+        //        bear.GetComponent<BearController>().heardSomething = true;
+        //    }
+        //}
+        //else if(speed <= 0.0000)
+        //{
+        //    state = State.notMoving;
+        //    movingState = 0;
+        //}
+        //else
+        //{
+        //    state = State.walking;
+        //    movingState = 1;
+        //}
+
+        //Debug.Log(state);
+
+        RaycastHit hit;
+
+        //if(distToBear > 8.0)
+        //{
+        //    canHearBear = false;
+        //}
+        //else
+        //{
+        //    canHearBear = true;
+        //}
         //Debug.Log(distToBear);
 
         //canHearBear = Physics.Raycast(player.transform.position, bear.position - player.transform.position, out hit, 8.0f);

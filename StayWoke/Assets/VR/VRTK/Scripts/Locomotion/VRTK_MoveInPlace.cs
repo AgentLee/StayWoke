@@ -151,6 +151,7 @@ namespace VRTK
         /// <returns>Returns a float representing the player's current movement speed.</returns>
         public virtual float GetSpeed()
         {
+            Debug.Log("VRTK SPEED: " + currentSpeed);
             return currentSpeed;
         }
 
