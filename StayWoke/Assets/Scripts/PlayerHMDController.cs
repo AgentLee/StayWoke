@@ -78,13 +78,14 @@ public class PlayerHMDController : MonoBehaviour
 
         if (speed > 1.6f)
         {
-            //Debug.Log("LOUD " + speed);
-            bear.GetComponent<BearController>().heardSomething = true;
+            Debug.Log("LOUD " + speed);
+			bear.GetComponent<BearController>().heardPlayer = true;
+			bear.GetComponent<BearController> ().setIdle ();
         }
         else
         {
-            //Debug.Log("QUIET " + speed);
-            bear.GetComponent<BearController>().heardSomething = false;
+            Debug.Log("QUIET " + speed);
+			bear.GetComponent<BearController>().heardPlayer = false;
         }
 
         //if (speed > 2.0)
