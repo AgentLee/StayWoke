@@ -52,7 +52,6 @@ public class NPCMove : MonoBehaviour
     {
 		if(targetDestination != null)
         {
-			Debug.Log ("WALK");
 			// Can't call walkTowardsObject() at the end of the coroutine because
 			// navMeshAgent.SetDestination() acts like its own coroutine and won't
 			// do anything until after the NPC reaches the destination.
@@ -61,7 +60,6 @@ public class NPCMove : MonoBehaviour
             _navMeshAgent.SetDestination(targetDestination);
 
 			// Reset flags
-			bearController.GetComponent<BearController> ().heardSomething = false;
             for (int i = 0; i < items.Count; i++)
             {
 				items [i].GetComponent<CollisionSound> ().thrown = false;
@@ -74,6 +72,9 @@ public class NPCMove : MonoBehaviour
         float dist = (targetDestination - bearController.GetComponent<BearController>().transform.position).magnitude;
         if(dist < 2.0f)
         {
+			if (bearController.GetComponent<BearController> ().heardSomething) {
+				bearController.GetComponent<BearController> ().heardSomething = false;
+			}
             //Debug.Log(dist);
             bearController.GetComponent<BearController>().setIdle();
             _navMeshAgent.isStopped = true;

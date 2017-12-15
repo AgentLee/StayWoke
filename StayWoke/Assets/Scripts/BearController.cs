@@ -110,18 +110,20 @@ public class BearController : MonoBehaviour
         }
         */
 
-
+		/*
 		if (heardSomething) {
 			Debug.Log ("WLAK");
 			walkTowardsObject ();
 			return;
 		}
-
+		*/
         
         // If player is close to NPC and is either in FOV or has already seen the player, walk or attack
         if (bearRaySeesPlayer && (angle < maxSightAngle || seenPlayer) && (playerAboveGrass))
         {
             seenPlayer = true;
+
+			heardSomething = false;
 
             // Have NPC rotate towards player
             this.transform.rotation = Quaternion.Slerp(this.transform.rotation, Quaternion.LookRotation(direction), 0.1f);
@@ -147,11 +149,10 @@ public class BearController : MonoBehaviour
                 attackPlayer();
             }
         }
-		else if(!bearRaySeesPlayer && !heardSomething)
+		else if(!bearRaySeesPlayer && angle < maxSightAngle)
         {
-           seenPlayer = false;
-			Debug.Log ("DKSLJFKJDKLJS");
-           //setIdle();
+           	seenPlayer = false;
+      		setIdle();
         }
     }
 
