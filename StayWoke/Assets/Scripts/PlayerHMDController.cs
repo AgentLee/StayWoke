@@ -85,8 +85,11 @@ public class PlayerHMDController : MonoBehaviour
 			//if (player.GetComponent<PlayerHMDController> ().hasPooridge) {
 				//bear.GetComponent<BearController> ().runTowardsPlayer ();
 			//} else {
-			if (bear.GetComponent<BearController> ().anim.GetBool ("isSleeping")) {
+			if (bear.GetComponent<BearController> ().anim.GetBool ("isSleeping") && !player.GetComponent<PlayerHMDController> ().hasPooridge) {
 				bear.GetComponent<BearController> ().setIdle ();
+			} else {
+				Debug.Log ("NOT SLEEPING AND HAS PORRIDGE");
+				bear.GetComponent<BearController> ().runTowardsPlayer ();
 			}
 			//}
         }

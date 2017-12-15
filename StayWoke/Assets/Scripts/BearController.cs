@@ -158,7 +158,7 @@ public class BearController : MonoBehaviour
 			// Has pooridge
 		} 
 		else {
-			if (bearRaySeesPlayer && (angle < maxSightAngle || seenPlayer) && (playerAboveGrass) && !npcMover.GetComponent<NPCMove>().goAfterObject)
+			if (bearRaySeesPlayer && (angle < maxSightAngle || seenPlayer) && (playerAboveGrass))
 			{
 				seenPlayer = true;
 
@@ -190,6 +190,8 @@ public class BearController : MonoBehaviour
 			}
 			else if(!bearRaySeesPlayer && angle < maxSightAngle)
 			{
+				Debug.Log ("CANT SEE");
+				player.GetComponent<PlayerHMDController> ().hasPooridge = false;
 				seenPlayer = false;
 				setIdle();
 			}
@@ -296,9 +298,9 @@ public class BearController : MonoBehaviour
     public void attackPlayer()
     {
         anim.SetBool("isAttacking", true);
-		int attackType = (int)Random.Range (1, 5);
-		if (attackType == 5) {
-			attackType = 4;
+		int attackType = (int)Random.Range (1, 3);
+		if (attackType == 3) {
+			attackType = 2;
 		}
 		//Debug.Log (attackType);
 		anim.SetInteger ("attackType", attackType);//(int)Random.Range(0, 3));
