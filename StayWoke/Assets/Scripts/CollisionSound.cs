@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CollisionSound : MonoBehaviour {
 
-    public AudioClip audio;
+	public AudioSource aux;
 
     public bool onStart;
     public bool thrown;
@@ -15,8 +15,8 @@ public class CollisionSound : MonoBehaviour {
 	void Start () {
         thrown = false;
         onStart = true;
-        GetComponent<AudioSource>().playOnAwake = false;
-        GetComponent<AudioSource>().clip = audio;
+
+		aux = GetComponent<AudioSource>();
 	}
 
     void Update()
@@ -26,18 +26,21 @@ public class CollisionSound : MonoBehaviour {
     void OnCollisionEnter(Collision collision)
     {
         // Eventually want to add tags for walls too
-        if (collision.collider.tag == "Terrain")
-        {
-            if(onStart)
-            {
-                onStart = false;
-                return;
-            }
+		if (collision.collider.tag == "Terrain") {
+			//if(onStart)
+			//{
+			//    onStart = false;
+			//    return;
+			//}
 
-            Debug.Log(collision.collider.tag);
-            this.GetComponent<AudioSource>().Play();
-            thrown = true;
-        }
+			if (!aux.isPlaying) {
+				aux.Play ();
+			} else if (aux.isPlaying) {
+				aux.Stop ();
+			}
+
+			thrown = true;
+		} 
     }
 
     public void printSomething(int n)

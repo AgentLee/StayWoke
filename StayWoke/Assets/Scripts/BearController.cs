@@ -85,6 +85,12 @@ public class BearController : MonoBehaviour
             attackPlayer();
             return;
         }
+
+		if (heardSomething) {
+			Debug.Log ("WLAK");
+			walkTowardsObject ();
+			return;
+		}
         
         // If player is close to NPC and is either in FOV or has already seen the player, walk or attack
         if (bearRaySeesPlayer && (angle < maxSightAngle || seenPlayer) && (playerAboveGrass))
@@ -115,12 +121,12 @@ public class BearController : MonoBehaviour
                 attackPlayer();
             }
         }
-        else
-        {
-            seenPlayer = false;
+        //else
+        //{
+        //    seenPlayer = false;
 
-            setIdle();
-        }
+       //     setIdle();
+        //}
     }
 
     private void OnTriggerEnter(Collider other)
@@ -151,8 +157,6 @@ public class BearController : MonoBehaviour
 
         //Debug.Log("SLEEPING");
         yield return new WaitUntil(() => heardSomething);
-
-        setIdle();
     }
 
     // TODO:
@@ -170,6 +174,7 @@ public class BearController : MonoBehaviour
 
     public void walkTowardsObject()
     {
+		//Debug.Log ("FROM NPCMOVE");
         anim.SetBool("isWalking", true);
         anim.SetBool("isIdle", false);
         anim.SetBool("isSleeping", false);

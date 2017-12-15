@@ -23,15 +23,12 @@ public class NPCMove : MonoBehaviour
 
 	// Use this for initialization
 	void Start () {
-        //player = GetComponent<PlayerHMDController>().gameObject;
-
         _navMeshAgent = this.GetComponent<NavMeshAgent>();
-        _navMeshAgent.stoppingDistance = 0.15f;
+        _navMeshAgent.stoppingDistance = 3.0f;
 		_navMeshAgent.acceleration = 0.25f;
 		_navMeshAgent.speed = 1.0f;
 
         item0 = Instantiate(Resources.Load("FixedJointGrab_Cube")) as GameObject;
-        //item0.transform.position = new Vector3(98.04f, 10.075f, 90.78f);
         item0.transform.position = new Vector3(70, 10, 104);
         items.Add(item0);
 
@@ -44,7 +41,7 @@ public class NPCMove : MonoBehaviour
         //item2.transform.position = new Vector3(70.0f, 10.0f, 103.0f);
         //items.Add(item2);
 
-        _destination = item0.transform;
+		targetDestination = item0.transform.position;
 
         canGetToObject = false;
 
@@ -53,30 +50,20 @@ public class NPCMove : MonoBehaviour
 	
     void SetDestination()
     {
-        if(_destination != null)
+		if(targetDestination != null)
         {
-            //this.GetComponent<BearController>().anim.SetBool("isIdle", false);
-            //this.GetComponent<BearController>().anim.SetBool("isWalking", true);
+			// Can't call walkTowardsObject() at the end of the coroutine because
+			// navMeshAgent.SetDestination() acts like its own coroutine and won't
+			// do anything until after the NPC reaches the destination.
+			bearController.GetComponent<BearController> ().walkTowardsObject ();
 
-
-            //bearController.GetComponent<BearController>().anim.SetBool("isWalking", false);
-            //_navMeshAgent.stoppingDistance = 10.0f;
             _navMeshAgent.SetDestination(targetDestination);
 
-
-            //Debug.Log(_navMeshAgent.nextPosition);
-            //Debug.Log(_destination);
-            //Debug.Log("-------------------------");
-
-            Debug.Log(_navMeshAgent.pathStatus);
-
-            //bearController.GetComponent<BearController>().setIdle();
-
+			// Reset flags
+			bearController.GetComponent<BearController> ().heardSomething = false;
             for (int i = 0; i < items.Count; i++)
             {
-                item0.GetComponent<CollisionSound>().thrown = false;
-                item1.GetComponent<CollisionSound>().thrown = false;
-                //item2.GetComponent<CollisionSound>().thrown = false;
+				items [i].GetComponent<CollisionSound> ().thrown = false;
             }
         }
     }
@@ -98,9 +85,8 @@ public class NPCMove : MonoBehaviour
         {
             if(items[i].GetComponent<CollisionSound>().thrown)
             {
-                //Debug.Log("THROWN");
                 targetDestination = items[i].transform.position;
-                _destination.position = targetDestination;
+                //_destination.position = targetDestination;
                 goToObject = true;
             }
         }
@@ -110,34 +96,24 @@ public class NPCMove : MonoBehaviour
             // Calculate new distance to target
             float pathLength = CalculatePathLength(targetDestination);
 
-            //Debug.Log(pathLength);
-
             // Check to see if the path length is within some radius
+			// Basically need to listen for the objects that fall and make sounds.
             if (pathLength < 9.0f && goToObject)
             {
-                canGetToObject = true;
+				bearController.GetComponent<BearController> ().heardSomething = true;
+
+				// Move NPC 
+				SetDestination ();
+				// Not sure why I still have this here D:
+				_navMeshAgent.isStopped = false;
             }
             else
             {
-                canGetToObject = false;
-                item0.GetComponent<CollisionSound>().thrown = false;
-                item1.GetComponent<CollisionSound>().thrown = false;
-                //item2.GetComponent<CollisionSound>().thrown = false;
-            }
-
-            // Basically need to listen for the objects that fall and make sounds.
-            if (canGetToObject)
-            {
-                //Debug.Log("CANCANCANCAN");
-
-                bearController.GetComponent<BearController>().heardSomething = true;
-                bearController.GetComponent<BearController>().walkTowardsObject();
-                SetDestination();
-                _navMeshAgent.isStopped = false;
-
-                //if (bearController.GetComponent<BearController>().isSleeping)
-                //{
-                //}
+				bearController.GetComponent<BearController> ().heardSomething = false;
+				for (int i = 0; i < items.Count; i++)
+				{
+					items [i].GetComponent<CollisionSound> ().thrown = false;
+				}
             }
         }
     }
