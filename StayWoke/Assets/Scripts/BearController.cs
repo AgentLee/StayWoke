@@ -137,13 +137,13 @@ public class BearController : MonoBehaviour
 				}
 				else
 				{
-						walkTowardsPlayer ();
+					walkTowardsPlayer ();
 				}
 
 				// Only starts to follow within a certain distance
 				if (direction.magnitude > 3)
 				{
-						walkTowardsPlayer ();
+					walkTowardsPlayer ();
 				}
 				else
 				{
@@ -156,7 +156,8 @@ public class BearController : MonoBehaviour
 				setIdle();
 			}
 			// Has pooridge
-		} else {
+		} 
+		else {
 			if (bearRaySeesPlayer && (angle < maxSightAngle || seenPlayer) && (playerAboveGrass) && !npcMover.GetComponent<NPCMove>().goAfterObject)
 			{
 				seenPlayer = true;
@@ -194,6 +195,7 @@ public class BearController : MonoBehaviour
 			}
 		}
 
+
         
     }
 
@@ -224,7 +226,7 @@ public class BearController : MonoBehaviour
 	public void runTowardsPlayer()
 	{
 		this.isRunning = true;
-		this.transform.Translate(0, 0, 0.015f);
+		this.transform.Translate(0, 0, 0.0075f);
 		anim.SetBool("isRunning", true);
 		anim.SetBool("isWalking", false);
 		anim.SetBool("isIdle", false);
@@ -248,7 +250,8 @@ public class BearController : MonoBehaviour
         anim.SetBool("isIdle", true);
         anim.SetBool("isSleeping", false);
         anim.SetBool("isWalking", false);
-        anim.SetBool("isAttacking", false);
+		anim.SetBool("isAttacking", false);
+        anim.SetBool("isRunning", false);
     }
 
     IEnumerator goToSleep()
@@ -258,6 +261,7 @@ public class BearController : MonoBehaviour
         anim.SetBool("isIdle", false);
         anim.SetBool("isWalking", false);
         anim.SetBool("isAttacking", false);
+		anim.SetBool("isRunning", false);
 
         //Debug.Log("SLEEPING");
         yield return new WaitUntil(() => heardSomething);
@@ -276,6 +280,7 @@ public class BearController : MonoBehaviour
         anim.SetBool("isIdle", false);
         anim.SetBool("isSleeping", false);
         anim.SetBool("isAttacking", false);
+		anim.SetBool("isRunning", false);
     }
 
     public void walkTowardsObject()
@@ -284,6 +289,7 @@ public class BearController : MonoBehaviour
         anim.SetBool("isWalking", true);
         anim.SetBool("isIdle", false);
         anim.SetBool("isSleeping", false);
+		anim.SetBool("isRunning", false);
         anim.SetBool("isAttacking", false);
     }
 
@@ -299,5 +305,6 @@ public class BearController : MonoBehaviour
         anim.SetBool("isIdle", false);
         anim.SetBool("isSleeping", false);
         anim.SetBool("isWalking", false);
+		anim.SetBool("isRunning", false);
     }
 }
