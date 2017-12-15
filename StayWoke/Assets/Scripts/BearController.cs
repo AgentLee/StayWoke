@@ -295,6 +295,13 @@ public class BearController : MonoBehaviour
         anim.SetBool("isAttacking", false);
     }
 
+	IEnumerator endGame()
+	{
+		yield return new WaitForSeconds (5);
+
+		Application.LoadLevel (Application.loadedLevel);
+	}
+
     public void attackPlayer()
     {
         anim.SetBool("isAttacking", true);
@@ -309,6 +316,6 @@ public class BearController : MonoBehaviour
         anim.SetBool("isWalking", false);
 		anim.SetBool("isRunning", false);
 
-		Application.LoadLevel (Application.loadedLevel);
+		StartCoroutine (endGame ());
     }
 }
