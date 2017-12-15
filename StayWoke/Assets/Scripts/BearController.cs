@@ -118,7 +118,7 @@ public class BearController : MonoBehaviour
 
         
         // If player is close to NPC and is either in FOV or has already seen the player, walk or attack
-        if (bearRaySeesPlayer && (angle < maxSightAngle || seenPlayer) && (playerAboveGrass))
+		if (bearRaySeesPlayer && (angle < maxSightAngle || seenPlayer) && (playerAboveGrass) && !npcMover.GetComponent<NPCMove>().goAfterObject)
         {
             seenPlayer = true;
 
@@ -135,7 +135,12 @@ public class BearController : MonoBehaviour
             }
             else
             {
-                walkTowardsPlayer();
+				if (player.GetComponent<PlayerHMDController> ().hasPooridge) {
+					Debug.Log ("RUNNNNN");
+				}
+				else {
+					walkTowardsPlayer ();
+				}
             }
 
             // Only starts to follow within a certain distance

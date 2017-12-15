@@ -20,6 +20,7 @@ public class NPCMove : MonoBehaviour
 
     public bool canGetToObject;
     public Vector3 targetDestination;
+	public bool goAfterObject;
 
 	// Use this for initialization
 	void Start () {
@@ -46,6 +47,8 @@ public class NPCMove : MonoBehaviour
         canGetToObject = false;
 
         bearController = GetComponent<BearController>().gameObject;
+
+		goAfterObject = false;
     }
 	
     public void SetDestination()
@@ -102,6 +105,7 @@ public class NPCMove : MonoBehaviour
 			// Basically need to listen for the objects that fall and make sounds.
             if (pathLength < 9.0f && goToObject)
             {
+				goAfterObject = true;
 				bearController.GetComponent<BearController> ().heardSomething = true;
 				bearController.GetComponent<BearController> ().anim.SetBool ("isWalking", true);
 				bearController.GetComponent<BearController> ().anim.SetBool ("isSleeping", false);
@@ -117,6 +121,7 @@ public class NPCMove : MonoBehaviour
             }
             else
             {
+				goAfterObject = false;
 				bearController.GetComponent<BearController> ().heardSomething = false;
 				for (int i = 0; i < items.Count; i++)
 				{

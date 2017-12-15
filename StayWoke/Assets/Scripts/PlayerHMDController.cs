@@ -23,6 +23,7 @@ public class PlayerHMDController : MonoBehaviour
 
     public float speed;
     public bool canHearBear;
+	public bool hasPooridge;
 
 	// Use this for initialization
 	void Start () {
@@ -32,6 +33,7 @@ public class PlayerHMDController : MonoBehaviour
         player.layer = 0;
         movingState = 0;
         speed = 0;
+		hasPooridge = false;
     }
 
     // Update is called once per frame
@@ -78,13 +80,13 @@ public class PlayerHMDController : MonoBehaviour
 
         if (speed > 1.6f)
         {
-            Debug.Log("LOUD " + speed);
+            //Debug.Log("LOUD " + speed);
 			bear.GetComponent<BearController>().heardPlayer = true;
 			bear.GetComponent<BearController> ().setIdle ();
         }
         else
         {
-            Debug.Log("QUIET " + speed);
+            //Debug.Log("QUIET " + speed);
 			bear.GetComponent<BearController>().heardPlayer = false;
         }
 
