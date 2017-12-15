@@ -82,7 +82,11 @@ public class PlayerHMDController : MonoBehaviour
         {
             //Debug.Log("LOUD " + speed);
 			bear.GetComponent<BearController>().heardPlayer = true;
-			bear.GetComponent<BearController> ().setIdle ();
+			//if (player.GetComponent<PlayerHMDController> ().hasPooridge) {
+				bear.GetComponent<BearController> ().runTowardsPlayer ();
+			//} else {
+				//bear.GetComponent<BearController> ().setIdle ();
+			//}
         }
         else
         {

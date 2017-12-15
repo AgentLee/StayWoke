@@ -8,7 +8,7 @@ public class PorridgeScript : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		player = GetComponent<PlayerHMDController> ().gameObject;
+		//player = GetComponent<PlayerHMDController> ().gameObject;
 	}
 	
 	// Update is called once per frame

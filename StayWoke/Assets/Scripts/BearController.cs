@@ -24,7 +24,8 @@ public class BearController : MonoBehaviour
     public bool pokedBear;
     public bool isSleeping     = false;
     public bool seenPlayer     = false;
-    public bool isWalking      = false;
+	public bool isWalking      = false;
+    public bool isRunning    = false;
     public bool heardSomething = false;
 	public bool heardPlayer 	= false;
     public bool facingPlayer = false;
@@ -112,52 +113,88 @@ public class BearController : MonoBehaviour
         */
 
 
-		if (heardPlayer) {
+		if (heardPlayer && !player.GetComponent<PlayerHMDController> ().hasPooridge) {
 			setIdle();
 		}
 
         
-        // If player is close to NPC and is either in FOV or has already seen the player, walk or attack
-		if (bearRaySeesPlayer && (angle < maxSightAngle || seenPlayer) && (playerAboveGrass) && !npcMover.GetComponent<NPCMove>().goAfterObject)
-        {
-            seenPlayer = true;
+		if (!player.GetComponent<PlayerHMDController> ().hasPooridge) {
+			// If player is close to NPC and is either in FOV or has already seen the player, walk or attack
+			if (bearRaySeesPlayer && (angle < maxSightAngle || seenPlayer) && (playerAboveGrass) && !npcMover.GetComponent<NPCMove>().goAfterObject)
+			{
+				seenPlayer = true;
 
-			heardSomething = false;
+				heardSomething = false;
 
-            // Have NPC rotate towards player
-            this.transform.rotation = Quaternion.Slerp(this.transform.rotation, Quaternion.LookRotation(direction), 0.1f);
+				// Have NPC rotate towards player
+				this.transform.rotation = Quaternion.Slerp(this.transform.rotation, Quaternion.LookRotation(direction), 0.1f);
 
-            //Debug.Log("Direction Length: " + directionLength);
+				//Debug.Log("Direction Length: " + directionLength);
 
-            if (directionLength < 5)
-            {
-                attackPlayer();
-            }
-            else
-            {
-				if (player.GetComponent<PlayerHMDController> ().hasPooridge) {
-					Debug.Log ("RUNNNNN");
+				if (directionLength < 3)
+				{
+					attackPlayer();
 				}
-				else {
-					walkTowardsPlayer ();
+				else
+				{
+						walkTowardsPlayer ();
 				}
-            }
 
-            // Only starts to follow within a certain distance
-            if (direction.magnitude > 3)
-            {
-                walkTowardsPlayer();
-            }
-            else
-            {
-                attackPlayer();
-            }
-        }
-		else if(!bearRaySeesPlayer && angle < maxSightAngle)
-        {
-           	seenPlayer = false;
-      		setIdle();
-        }
+				// Only starts to follow within a certain distance
+				if (direction.magnitude > 3)
+				{
+						walkTowardsPlayer ();
+				}
+				else
+				{
+					attackPlayer();
+				}
+			}
+			else if(!bearRaySeesPlayer && angle < maxSightAngle)
+			{
+				seenPlayer = false;
+				setIdle();
+			}
+			// Has pooridge
+		} else {
+			if (bearRaySeesPlayer && (angle < maxSightAngle || seenPlayer) && (playerAboveGrass) && !npcMover.GetComponent<NPCMove>().goAfterObject)
+			{
+				seenPlayer = true;
+
+				heardSomething = false;
+
+				// Have NPC rotate towards player
+				this.transform.rotation = Quaternion.Slerp(this.transform.rotation, Quaternion.LookRotation(direction), 0.1f);
+
+				//Debug.Log("Direction Length: " + directionLength);
+
+				if (directionLength < 3)
+				{
+					attackPlayer();
+				}
+				else
+				{
+					runTowardsPlayer ();
+				}
+
+				// Only starts to follow within a certain distance
+				if (direction.magnitude > 3)
+				{
+					runTowardsPlayer ();
+				}
+				else
+				{
+					attackPlayer();
+				}
+			}
+			else if(!bearRaySeesPlayer && angle < maxSightAngle)
+			{
+				seenPlayer = false;
+				setIdle();
+			}
+		}
+
+        
     }
 
 	public void wander()
@@ -182,6 +219,17 @@ public class BearController : MonoBehaviour
 
 			wanderPointID = Random.Range (0, wanderPoints.Length - 1);
 		}
+	}
+
+	public void runTowardsPlayer()
+	{
+		this.isRunning = true;
+		this.transform.Translate(0, 0, 0.015f);
+		anim.SetBool("isRunning", true);
+		anim.SetBool("isWalking", false);
+		anim.SetBool("isIdle", false);
+		anim.SetBool("isSleeping", false);
+		anim.SetBool("isAttacking", false);
 	}
 
     private void OnTriggerEnter(Collider other)
