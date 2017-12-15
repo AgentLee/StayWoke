@@ -12,6 +12,7 @@ TagManager:
   - porridge
   - Left
   - Right
+  - WanderPoints
   layers:
   - Default
   - TransparentFX

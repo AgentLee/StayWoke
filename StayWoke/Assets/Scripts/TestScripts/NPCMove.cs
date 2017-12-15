@@ -8,7 +8,7 @@ public class NPCMove : MonoBehaviour
     [SerializeField]
     Transform _destination;
 
-    NavMeshAgent _navMeshAgent;
+    public NavMeshAgent _navMeshAgent;
 
     public List<GameObject> items;
     public GameObject item0;
@@ -19,7 +19,7 @@ public class NPCMove : MonoBehaviour
     public GameObject bearController;
 
     public bool canGetToObject;
-    private Vector3 targetDestination;
+    public Vector3 targetDestination;
 
 	// Use this for initialization
 	void Start () {
@@ -48,16 +48,20 @@ public class NPCMove : MonoBehaviour
         bearController = GetComponent<BearController>().gameObject;
     }
 	
-    void SetDestination()
+    public void SetDestination()
     {
 		if(targetDestination != null)
         {
+			Debug.Log ("WALK");
 			// Can't call walkTowardsObject() at the end of the coroutine because
 			// navMeshAgent.SetDestination() acts like its own coroutine and won't
 			// do anything until after the NPC reaches the destination.
 			bearController.GetComponent<BearController> ().walkTowardsObject ();
 
             _navMeshAgent.SetDestination(targetDestination);
+
+			Debug.Log ("IDLE");
+			bearController.GetComponent<BearController> ().setIdle ();
 
 			// Reset flags
 			bearController.GetComponent<BearController> ().heardSomething = false;

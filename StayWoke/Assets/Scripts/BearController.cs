@@ -15,6 +15,12 @@ public class BearController : MonoBehaviour
     public float maxSightAngle;
     public Transform eyeTransform;
 
+	public GameObject npcMover;
+
+	// Wander Points
+	public GameObject[] wanderPoints;
+	public int wanderPointID;
+
     public bool pokedBear;
     public bool isSleeping     = false;
     public bool seenPlayer     = false;
@@ -22,17 +28,32 @@ public class BearController : MonoBehaviour
     public bool heardSomething = false;
     public bool facingPlayer = false;
 
+	public float idleTimer;
+
     // Use this for initialization
     void Start()
     {
         anim = GetComponent<Animator>();
         collider_radius = player_collider.radius;
         heardSomething = false;
+		wanderPoints = GameObject.FindGameObjectsWithTag ("WanderPoints");
+		wanderPointID = Random.Range (0, wanderPoints.Length - 1);
+		npcMover = GetComponent<NPCMove> ().gameObject;
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
+		if(anim.GetBool("isIdle")) {
+			idleTimer += Time.deltaTime;
+		}
+
+		Debug.Log (idleTimer);
+		if(idleTimer > 5.0f) {
+			wander ();
+			return;
+		}
+
         Vector3 direction       = player.transform.position - this.transform.position;
         // Prevent NPC from tipping over when you get too close 
         direction.y             = 0;
@@ -129,6 +150,30 @@ public class BearController : MonoBehaviour
         //}
     }
 
+	public void wander()
+	{
+		if (Vector3.Distance (this.transform.position, wanderPoints [wanderPointID].transform.position) >= 2.0f) {
+			//npcMover.GetComponent<NPCMove>().targetDestination = wanderPoints[wanderPointID].transform.position;
+			//npcMover.GetComponent<NPCMove> ().SetDestination ();
+
+
+			//anim.SetBool("isWalking", true);
+			//anim.SetBool("isIdle", false);
+			//anim.SetBool("isSleeping", false);
+			//anim.SetBool("isAttacking", false);
+
+			walkTowardsObject ();
+
+			npcMover.GetComponent<NPCMove> ()._navMeshAgent.SetDestination (wanderPoints [wanderPointID].transform.position);
+			
+		}
+		else if(Vector3.Distance(this.transform.position, wanderPoints[wanderPointID].transform.position) < 2.0f) {
+			setIdle ();
+
+			wanderPointID = Random.Range (0, wanderPoints.Length - 1);
+		}
+	}
+
     private void OnTriggerEnter(Collider other)
     {
         // For whatever reason, I can't call attackPlayer() here.
@@ -140,6 +185,7 @@ public class BearController : MonoBehaviour
     }
     public void setIdle()
     {
+		idleTimer = 0.0f;
         isSleeping = false;
         anim.SetBool("isIdle", true);
         anim.SetBool("isSleeping", false);
