@@ -308,5 +308,7 @@ public class BearController : MonoBehaviour
         anim.SetBool("isSleeping", false);
         anim.SetBool("isWalking", false);
 		anim.SetBool("isRunning", false);
+
+		Application.LoadLevel (Application.loadedLevel);
     }
 }
