@@ -22,7 +22,8 @@ public class NPCMove : MonoBehaviour
     public Vector3 targetDestination;
 
 	// Use this for initialization
-	void Start () {
+	void Start () 
+	{
         _navMeshAgent = this.GetComponent<NavMeshAgent>();
         _navMeshAgent.stoppingDistance = 3.0f;
 		_navMeshAgent.acceleration = 0.25f;
@@ -60,8 +61,8 @@ public class NPCMove : MonoBehaviour
 
             _navMeshAgent.SetDestination(targetDestination);
 
-			Debug.Log ("IDLE");
-			bearController.GetComponent<BearController> ().setIdle ();
+			//Debug.Log ("IDLE");
+			//bearController.GetComponent<BearController> ().setIdle ();
 
 			// Reset flags
 			bearController.GetComponent<BearController> ().heardSomething = false;
@@ -73,7 +74,8 @@ public class NPCMove : MonoBehaviour
     }
 
 	// Update is called once per frame
-	void Update () {
+	void Update () 
+	{
         float dist = (targetDestination - bearController.GetComponent<BearController>().transform.position).magnitude;
         if(dist < 2.0f)
         {
@@ -105,6 +107,14 @@ public class NPCMove : MonoBehaviour
             if (pathLength < 9.0f && goToObject)
             {
 				bearController.GetComponent<BearController> ().heardSomething = true;
+			
+
+				//Debug.Log ("FROM NPCMOVE");
+				bearController.GetComponent<BearController> ().anim.SetBool("isWalking", true);
+				bearController.GetComponent<BearController> ().anim.SetBool("isIdle", false);
+				bearController.GetComponent<BearController> ().anim.SetBool("isSleeping", false);
+				bearController.GetComponent<BearController> ().anim.SetBool("isAttacking", false);
+				bearController.GetComponent<BearController> ().walkTowardsObject ();
 
 				// Move NPC 
 				SetDestination ();

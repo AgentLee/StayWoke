@@ -25,6 +25,7 @@ public class BearController : MonoBehaviour
     public bool isSleeping     = false;
     public bool seenPlayer     = false;
     public bool isWalking      = false;
+	public bool isWandering = false;
     public bool heardSomething = false;
     public bool facingPlayer = false;
 
@@ -44,15 +45,26 @@ public class BearController : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-		if(anim.GetBool("isIdle")) {
+		/*if(anim.GetBool("isIdle")) {
 			idleTimer += Time.deltaTime;
 		}
 
 		Debug.Log (idleTimer);
 		if(idleTimer > 5.0f) {
-			wander ();
-			return;
-		}
+			int action = Random.Range (0, 4);
+			if (action == 2 || action == 4) {
+				wander ();
+				return;
+			} else {
+				anim.SetBool ("isSleeping", true);
+				anim.SetBool ("isIdle", false);
+				if (anim.GetBool("isSleeping"))
+				{
+					sleepRoutine = StartCoroutine(goToSleep());
+					return;
+				}
+			}
+		}*/
 
         Vector3 direction       = player.transform.position - this.transform.position;
         // Prevent NPC from tipping over when you get too close 
@@ -82,20 +94,19 @@ public class BearController : MonoBehaviour
 
         // Checks to see if the player is above the grass
         // Might have to make this a user defined parameter
-        bool playerAboveGrass = playerHead.transform.position.y > 11f;
+        bool playerAboveGrass = playerHead.transform.position.y > 11.25f;
 
         // This should be the start state
-        Coroutine sleepRoutine;
+		Coroutine sleepRoutine;
         if (anim.GetBool("isSleeping"))
         {
             sleepRoutine = StartCoroutine(goToSleep());
             return;
         }
 
+		/*
         if(pokedBear)
         {
-			//Debug.Log ("POKE");
-			
             // Orient bear towards player
             Vector3 targetDir = player.transform.position - this.transform.position;
             float step =  0.45f * Time.deltaTime;
@@ -106,48 +117,45 @@ public class BearController : MonoBehaviour
             attackPlayer();
             return;
         }
+        */
 
-		if (heardSomething) {
-			Debug.Log ("WLAK");
+		if (heardSomething) 
+		{
 			walkTowardsObject ();
 			return;
 		}
         
         // If player is close to NPC and is either in FOV or has already seen the player, walk or attack
-        if (bearRaySeesPlayer && (angle < maxSightAngle || seenPlayer) && (playerAboveGrass))
+        if (bearRaySeesPlayer)
         {
-            seenPlayer = true;
+			if ((angle < maxSightAngle || seenPlayer) && playerAboveGrass) 
+			{
+				seenPlayer = true;
 
-            // Have NPC rotate towards player
-            this.transform.rotation = Quaternion.Slerp(this.transform.rotation, Quaternion.LookRotation(direction), 0.1f);
+				// Have NPC rotate towards player
+				this.transform.rotation = Quaternion.Slerp (this.transform.rotation, Quaternion.LookRotation (direction), 0.1f);
 
-            //Debug.Log("Direction Length: " + directionLength);
+				//Debug.Log("Direction Length: " + directionLength);
 
-            if (directionLength < 5)
-            {
-                attackPlayer();
-            }
-            else
-            {
-                walkTowardsPlayer();
-            }
+				if (directionLength < 5) {
+					attackPlayer ();
+				} else {
+					walkTowardsPlayer ();
+				}
 
-            // Only starts to follow within a certain distance
-            if (direction.magnitude > 3)
-            {
-                walkTowardsPlayer();
-            }
-            else
-            {
-                attackPlayer();
-            }
+				// Only starts to follow within a certain distance
+				if (direction.magnitude > 3) {
+					walkTowardsPlayer ();
+				} else {
+					attackPlayer ();
+				}
+			} 
+			/*else {
+				seenPlayer = false;
+
+				setIdle();
+			}*/
         }
-        //else
-        //{
-        //    seenPlayer = false;
-
-       //     setIdle();
-        //}
     }
 
 	public void wander()
@@ -203,6 +211,9 @@ public class BearController : MonoBehaviour
 
         //Debug.Log("SLEEPING");
         yield return new WaitUntil(() => heardSomething);
+
+		//setIdle ();
+		//walkTowardsObject();
     }
 
     // TODO:
@@ -210,12 +221,15 @@ public class BearController : MonoBehaviour
     public void walkTowardsPlayer()
     {
         this.isWalking = true;
-        this.transform.Translate(0, 0, 0.005f);
+        
         anim.SetBool("isWalking", true);
 
         anim.SetBool("isIdle", false);
         anim.SetBool("isSleeping", false);
         anim.SetBool("isAttacking", false);
+
+		npcMover.GetComponent<NPCMove>().targetDestination = player.transform.position;
+		npcMover.GetComponent<NPCMove>().SetDestination ();
     }
 
     public void walkTowardsObject()
