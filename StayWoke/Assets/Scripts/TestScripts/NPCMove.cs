@@ -60,9 +60,6 @@ public class NPCMove : MonoBehaviour
 
             _navMeshAgent.SetDestination(targetDestination);
 
-			Debug.Log ("IDLE");
-			bearController.GetComponent<BearController> ().setIdle ();
-
 			// Reset flags
 			bearController.GetComponent<BearController> ().heardSomething = false;
             for (int i = 0; i < items.Count; i++)
@@ -105,11 +102,17 @@ public class NPCMove : MonoBehaviour
             if (pathLength < 9.0f && goToObject)
             {
 				bearController.GetComponent<BearController> ().heardSomething = true;
+				bearController.GetComponent<BearController> ().anim.SetBool ("isWalking", true);
+				bearController.GetComponent<BearController> ().anim.SetBool ("isSleeping", false);
+				bearController.GetComponent<BearController> ().anim.SetBool ("isIdle", false);
+				bearController.GetComponent<BearController> ().anim.SetBool ("isAttacking", false);
 
 				// Move NPC 
 				SetDestination ();
 				// Not sure why I still have this here D:
 				_navMeshAgent.isStopped = false;
+
+				//bearController.GetComponent<BearController> ().setIdle ();
             }
             else
             {

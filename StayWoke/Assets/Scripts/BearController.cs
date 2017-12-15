@@ -44,6 +44,7 @@ public class BearController : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+		/*
 		if(anim.GetBool("isIdle")) {
 			idleTimer += Time.deltaTime;
 		}
@@ -53,7 +54,7 @@ public class BearController : MonoBehaviour
 			wander ();
 			return;
 		}
-
+*/
         Vector3 direction       = player.transform.position - this.transform.position;
         // Prevent NPC from tipping over when you get too close 
         direction.y             = 0;
@@ -92,6 +93,7 @@ public class BearController : MonoBehaviour
             return;
         }
 
+		/*
         if(pokedBear)
         {
 			//Debug.Log ("POKE");
@@ -106,12 +108,15 @@ public class BearController : MonoBehaviour
             attackPlayer();
             return;
         }
+        */
+
 
 		if (heardSomething) {
 			Debug.Log ("WLAK");
 			walkTowardsObject ();
 			return;
 		}
+
         
         // If player is close to NPC and is either in FOV or has already seen the player, walk or attack
         if (bearRaySeesPlayer && (angle < maxSightAngle || seenPlayer) && (playerAboveGrass))
@@ -142,12 +147,12 @@ public class BearController : MonoBehaviour
                 attackPlayer();
             }
         }
-        //else
-        //{
-        //    seenPlayer = false;
-
-       //     setIdle();
-        //}
+		else if(!bearRaySeesPlayer && !heardSomething)
+        {
+           seenPlayer = false;
+			Debug.Log ("DKSLJFKJDKLJS");
+           //setIdle();
+        }
     }
 
 	public void wander()
